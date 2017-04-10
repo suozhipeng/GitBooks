@@ -32,6 +32,11 @@ _推荐博客：_
 [原文链接](http://www.jianshu.com/p/3b2c95e1404f)
 
 ---
+# iOS沉思录
+
+[系列链接](http://blog.csdn.net/cordova/article/category/6128968/1)
+
+---
 ## **CocoaPods 源码解析**
 
 [_CocoaPods都做了什么_](https://zhuanlan.zhihu.com/p/22652365)
