@@ -7,6 +7,21 @@ _推荐博客：_
 ## YYCache源码分析
 [原文链接](http://www.jianshu.com/p/b8dcf6634fab)
 
+---
+## YYKit__YYImage_源码分析
+[原文链接](http://www.jianshu.com/p/588d22e0b271)
+
+---
+## iOS 组件化 —— 路由设计思路分析
+[原文链接](http://www.jianshu.com/p/76da56b3bd55)
+
+---
+## SDWebImage源码
+[原文链接](http://www.jianshu.com/p/82c7f2865c92#)
+
+---
+## iOS异步图片加载优化与常用开源库分析
+[原文链接](http://www.jianshu.com/p/3b2c95e1404f)
 
 ---
 ## **CocoaPods 源码解析**
