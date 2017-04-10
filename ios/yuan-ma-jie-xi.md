@@ -8,6 +8,10 @@ _推荐博客：_
 [原文链接](http://www.jianshu.com/p/485b8d75ccd4#)
 
 ---
+## AFNetworking3.1.0源码解读
+[原文链接](http://www.jianshu.com/p/c36159094e24)
+
+---
 ## YYCache源码分析
 [原文链接](http://www.jianshu.com/p/b8dcf6634fab)
 
