@@ -1,0 +1,7 @@
+{
+
+    "pluglins":["ace"],
+    "pluglins":["emphasize"],
+    "plugins": [ "local-video" ]
+
+}
