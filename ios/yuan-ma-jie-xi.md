@@ -1,9 +1,10 @@
 # iOS源码解析案例
 
-_推荐博客：_ 
+_推荐博客：_   
 1. [分析代码逻辑](http://draveness.me/)
 
 ---
+
 # iOS沉思录
 
 [系列链接](http://blog.csdn.net/cordova/article/category/6128968/1)
@@ -11,30 +12,43 @@ _推荐博客：_
 ---
 
 ## 源码笔记---MBProgressHUD
+
 [原文链接](http://www.jianshu.com/p/485b8d75ccd4#)
 
 ---
+
 ## AFNetworking3.1.0源码解读
+
 [原文链接](http://www.jianshu.com/p/c36159094e24)
 
 ---
+
 ## YYCache源码分析
+
 [原文链接](http://www.jianshu.com/p/b8dcf6634fab)
 
 ---
-## YYKit__YYImage_源码分析
+
+## YYKit_\_YYImage_源码分析
+
 [原文链接](http://www.jianshu.com/p/588d22e0b271)
 
 ---
+
 ## iOS 组件化 —— 路由设计思路分析
+
 [原文链接](http://www.jianshu.com/p/76da56b3bd55)
 
 ---
+
 ## SDWebImage源码
+
 [原文链接](http://www.jianshu.com/p/82c7f2865c92#)
 
 ---
+
 ## iOS异步图片加载优化与常用开源库分析
+
 [原文链接](http://www.jianshu.com/p/3b2c95e1404f)
 
 ---
@@ -47,7 +61,7 @@ _推荐博客：_
 
 ## **iOS App 签名的原理**
 
-[原文链接](https://zhuanlan.zhihu.com/p/25873775) 
+[原文链接](https://zhuanlan.zhihu.com/p/25873775)   
 公钥基础设施PKI体系
 
 > 1. 非对称加密
@@ -56,8 +70,8 @@ _推荐博客：_
 > 4. 复杂签名
 > 5. 当前使用的签名方式
 
-**当前使用的签名方式**
-![](/assets/v2-779c5beca262fbd0da75c26ca1f84b55_r.png) 
+**当前使用的签名方式**  
+![](/assets/v2-779c5beca262fbd0da75c26ca1f84b55_r.png)   
 整个流程：
 
 > 1. 在你的 Mac 开发机器生成一对公私钥，这里称为公钥L，私钥L。L:Local
@@ -77,27 +91,27 @@ _推荐博客：_
 RN开发中，经常遇到的问题和优化
 
 > 1. 打包出来的JSBundle过大；
-> 拆包业务模块
+>    拆包业务模块
 > 2. 首次进入RN页面加载缓慢； 
-> 页面加载优化：
+>    页面加载优化：
 >
-> 打包工具优化：Unbundle --&gt; CRNUnbunle 
-> unbundle只适用 Android 
+> 打包工具优化：Unbundle --&gt; CRNUnbunle   
+> unbundle只适用 Android   
 > prepack适用iOS
 >
-> 3. 稳定性不够，有大量因为RN导致的crash；
+> 1. 稳定性不够，有大量因为RN导致的crash；
 >
-> iOS Crash处理： 
-> 基本都来自RCTFatalException，都是RCTFatal抛出错误信息所知， 处理也相对简单, 设置自己的Error Handler即可 
+> iOS Crash处理：   
+> 基本都来自RCTFatalException，都是RCTFatal抛出错误信息所知， 处理也相对简单, 设置自己的Error Handler即可   
 > void RCTSetFatalHandler\(RCTFatalHandler fatalHandler\);
 >
-> Android Crash处理： 
-> 1、bundle加载过程中的RuntimeException； 
-> 2、JS执行过程中的，处理NativeExceptionsManagerModule； 
-> 3、native模块执行出错， 处理NativeModuleCallExceptionHandler 
+> Android Crash处理：   
+> 1、bundle加载过程中的RuntimeException；   
+> 2、JS执行过程中的，处理NativeExceptionsManagerModule；   
+> 3、native模块执行出错， 处理NativeModuleCallExceptionHandler   
 > 4、so lib加载失败，经典的java.lang.UnsatisfiedLinkError, 这种问题，解决方案很简单，给System.load添加try catch，并且在catch里面做补偿，可以大大降低由此导致的crash；
 >
-> 4. 大数据量时候listview加载卡顿；
+> 1. 大数据量时候listview加载卡顿；
 >
 > CRNListView
 
@@ -105,7 +119,7 @@ RN开发中，经常遇到的问题和优化
 
 ## **如何优雅地使用 KVO**
 
-[原文链接](https://zhuanlan.zhihu.com/p/25582696) 
+[原文链接](https://zhuanlan.zhihu.com/p/25582696)   
 使用Facebook 开源的 [KVOController](https://github.com/facebook/KVOController) 框架
 
 ```objective-c
@@ -117,10 +131,13 @@ NSLog(@"%@", change);
 }];
 ```
 
-> 使用 KVOController 进行键值观测可以说完美地解决了在使用原生 KVO 时遇到的各种问题。 
-> 1. 不需要手动移除观察者； 
-> 2. 实现 KVO 与事件发生处的代码上下文相同，不需要跨方法传参数； 
-> 3. 使用 block 来替代方法能够减少使用的复杂度，提升使用 KVO 的体验； 
+> 使用 KVOController 进行键值观测可以说完美地解决了在使用原生 KVO 时遇到的各种问题。   
+> 1. 不需要手动移除观察者；   
+> 2. 实现 KVO 与事件发生处的代码上下文相同，不需要跨方法传参数；   
+> 3. 使用 block 来替代方法能够减少使用的复杂度，提升使用 KVO 的体验；   
 > 4. 每一个 keyPath 会对应一个属性，不需要在 block 中使用 if 判断 keyPath；
 
 ---
+
+
+
