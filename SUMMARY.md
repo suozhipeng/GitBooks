@@ -13,6 +13,7 @@
   * [iOS RunTime](ios/ios-runtime.md)
   * [多线程](ios/duo-xian-cheng.md)
   * [iOS自动化测试](ios/ioszi-dong-hua-ce-shi.md)
+  * [iOS适配](ios/iosshi-pei.md)
 * [Interview](interview/interview.md)
   * [Interface-面试Leader](interview/interfacexiang-guan.md)
   * [Interface-关于培训学习的建议](interview/interfaceguan-yu-pei-xun.md)
