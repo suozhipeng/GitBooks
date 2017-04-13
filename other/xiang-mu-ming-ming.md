@@ -1,12 +1,11 @@
-
 # 命名项目
 ## 1、文件夹命名
 - **omg**、**element**、**master**、**project**、**test**、**vue**、**iview**
 - 二级目录：
-	build、static、config、src、examples、base、common、issues、assert
+build、static、config、src、examples、base、common、issues、assert
 - 三级目录
-	libs、models、plugins、skins、images、css、js
-- 或者  color-pick、button\_groups 、node\_models、
+libs、models、plugins、skins、images、css、js
+- 或者 color-pick、button\_groups 、node\_models、
 ##2、文件命名
 
 - **常用组件命名**
