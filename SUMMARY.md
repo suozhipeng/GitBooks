@@ -8,7 +8,7 @@
 * [iOS原理解析](ios/yuan-ma-jie-xi.md)
   * [iOS-WKWebView 那些坑](ios/ios-wkwebview.md)
   * [iOS RunTime](ios/ios-runtime.md)
-  * [多线程](ios/duo-xian-cheng.md)
+  * [iOS-多线程](ios/duo-xian-cheng.md)
   * [iOS自动化测试](ios/ioszi-dong-hua-ce-shi.md)
   * [iOS适配](ios/iosshi-pei.md)
 * [Interview](interview/interview.md)
@@ -24,8 +24,8 @@
   * [Interview-iOS-06](interview/interview-ios-06.md)
   * [Interview-iOS-07](interview/interview-ios-07.md)
 * [其他](other/qi-ta.md)
-  * [搬瓦工](other/ban-wa-gong.md)
   * [项目命名](other/xiang-mu-ming-ming.md)
   * [设计模式MVC、MVP](other/she-ji-mo-shi-mvc-mvp.md)
+  * [搬瓦工](other/ban-wa-gong.md)
   * [nginx、swoole高并发原理](other/nginxswoolegao-bing-fa-yuan-li.md)
 
