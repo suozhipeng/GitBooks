@@ -33,3 +33,5 @@
   * [nginx、swoole高并发原理](other/nginxswoolegao-bing-fa-yuan-li.md)
 * [Tools IDE工具使用](tools/tools.md)
   * [Xcode](tools/xcode.md)
+  * [Mac](tools/mac.md)
+
