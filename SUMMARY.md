@@ -31,7 +31,5 @@
   * [设计模式MVC、MVP](other/she-ji-mo-shi-mvc-mvp.md)
   * [搬瓦工](other/ban-wa-gong.md)
   * [nginx、swoole高并发原理](other/nginxswoolegao-bing-fa-yuan-li.md)
-
-
 * [Tools IDE工具使用](tools/tools)
   * [Xcode](tools/xcode.md)
