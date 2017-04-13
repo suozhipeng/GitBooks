@@ -12,6 +12,7 @@
   * [iOS-多线程](ios/duo-xian-cheng.md)
   * [iOS自动化测试](ios/ioszi-dong-hua-ce-shi.md)
   * [iOS适配](ios/iosshi-pei.md)
+  * [iOS 零碎点](ios/ios-ling-sui-dian.md)
   * [Swift 零碎点](ios/swift-ling-sui-dian.md)
 * [Interview](interview/interview.md)
   * [Interface-面试Leader](interview/interfacexiang-guan.md)
