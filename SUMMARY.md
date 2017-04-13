@@ -26,4 +26,6 @@
   * [Interview-iOS-05](interview/interview-ios-05.md)
   * [Interview-iOS-06](interview/interview-ios-06.md)
   * [Interview-iOS-07](interview/interview-ios-07.md)
+* [其他](other/qi-ta.md)
+* [搬瓦工](other/ban-wa-gong.md)
 
