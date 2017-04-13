@@ -179,57 +179,23 @@ SDWebImage与AFNetworking都没有对第7点做优化，FastImageCache相对与�
 
 对于比较通用的缩放，或者圆角等功能，可以集成到控件本身。不过，提供一个接口出来，让使用者能够有机会对下载下来的图片做一些其他的特殊处理是有必要的。
 
-    /** SDWebImage
-     * Allows 
-    to
-     transform 
-    the
-     image immediately 
-    after
-    it
-     has been downloaded 
-    and
-     just 
-    before
-    to
-     cache 
-    it
-    on
-     disk 
-    and
-     memory.
-     * NOTE: This method 
-    is
-     called 
-    from
-     a 
-    global
-     queue 
-    in
-     order 
-    to
-    not
-    to
-     block 
-    the
-     main thread.
-     *
-     * @param imageManager The current `SDWebImageManager`
-     * @param image        The image 
-    to
-     transform
-     * @param imageURL     The url 
-    of
-    the
-     image 
-    to
-     transform
-     *
-     * @
-    return
-     The transformed image object.
-     */
-    - (UIImage *)imageManager:(SDWebImageManager *)imageManager transformDownloadedImage:(UIImage *)image withURL:(NSURL *)imageURL;
+
+```
+/** SDWebImage
+ * Allows to transform the image immediately after it has been downloaded and just before to cache it on disk and memory.
+ * NOTE: This method is called from a global queue in order to not to block the main thread.
+ *
+ * @param imageManager The current `SDWebImageManager`
+ * @param image        The image to transform
+ * @param imageURL     The url of the image to transform
+ *
+ * @return The transformed image object.
+ */
+- (UIImage *)imageManager:(SDWebImageManager *)imageManager transformDownloadedImage:(UIImage *)image withURL:(NSURL *)imageURL;
+
+```
+
+
 
 ## 2.6 其他（诸如图片预下载，gif支持等等,下载进度条）
 
