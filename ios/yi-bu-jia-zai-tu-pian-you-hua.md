@@ -1,4 +1,6 @@
 # **iOS异步图片加载优化与常用开源库分析**
+[原文链接](http://www.jianshu.com/p/3b2c95e1404f)
+
 ---
 # 1. 网络图片显示大体步骤:
 
@@ -180,7 +182,8 @@ SDWebImage与AFNetworking都没有对第7点做优化，FastImageCache相对与�
 对于比较通用的缩放，或者圆角等功能，可以集成到控件本身。不过，提供一个接口出来，让使用者能够有机会对下载下来的图片做一些其他的特殊处理是有必要的。
 
 
-```
+``` Objective-C 
+
 /** SDWebImage
  * Allows to transform the image immediately after it has been downloaded and just before to cache it on disk and memory.
  * NOTE: This method is called from a global queue in order to not to block the main thread.

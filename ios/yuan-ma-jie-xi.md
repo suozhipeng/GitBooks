@@ -50,6 +50,7 @@ _推荐博客：_
 ## iOS异步图片加载优化与常用开源库分析
 
 [原文链接](http://www.jianshu.com/p/3b2c95e1404f)
+或者：[**本地链接**](./yi-bu-jia-zai-tu-pian-you-hua.md)
 
 ---
 
