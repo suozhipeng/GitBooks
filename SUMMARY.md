@@ -7,6 +7,7 @@
   * [RN 零碎点](rn/rn-ling-sui-dian.md)
 * [iOS原理解析](ios/yuan-ma-jie-xi.md)
   * [iOS-WKWebView 那些坑](ios/ios-wkwebview.md)
+  * [iOS技能图谱](ios/iosji-neng-tu-pu.md)
   * [iOS RunTime](ios/ios-runtime.md)
   * [iOS异步图片加载优化与常用开源库分析](ios/yi-bu-jia-zai-tu-pian-you-hua.md)
   * [iOS-多线程](ios/duo-xian-cheng.md)
