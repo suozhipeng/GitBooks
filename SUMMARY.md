@@ -35,5 +35,5 @@
 * [Tools IDE工具使用](tools/tools.md)
   * [Xcode](tools/xcode.md)
   * [Mac](tools/mac.md)
-  * [GIt](toolsgitmd.md)
+  * [GIt](tools/toolsgitmd.md)
 

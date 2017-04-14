@@ -1,5 +1,5 @@
 # iOS 技能图谱
-
+[原文链接](https://github.com/DevDragonLi/Dev-Repo/blob/master/iOSNote/map-MobileDev-iOSDev.md)
 ## 编程语言
 ---
 Swift
@@ -53,74 +53,72 @@ KVO
 ---
 ReactiveCocoa
 RxSwift
-开发工具
-
-IDE
-Xcode
-AppCode
-调试工具
-Charles、Wireshark
-Reveal
-Instruments
-插件
-Alcatraz
-VVDocument
-XVim
-FuzzyAutocompletePlugin
-KSImageNamed-Xcode
-辅助工具
-xScope
-ImageOptim
-马克鳗
-Dash
-Deploymate
-FauxPas
-PaintCode
-命令行工具
-xcodebuild、xcode-select
-nomad
-xctool
-fastlane
-持续集成
-Jenkins
-Travis CI
-Bot
-开源项目
-
-AFNetworking & Alamofire
-Masonry
-SDWebImage
-SwiftyJSON
-JSPatch
-React Native
-包管理
-
-CocoaPods
-Carthage
-Swift Package Manager
-App 打包上传与审核
-
-Apple Developer 网站
-Itunes Connect 网站
-IAP
-加急审核申请
-打包脚本
-第三方服务
-
-崩溃收集
-
-Bugly
-Crashlytics
-BugHD
-数据统计
-
-Google Analytics
-友盟
-MTA
-Flurry
-App Annie
-应用分发
-
-TestFlight
-蒲公英
-FIR
+## 开发工具
+---
+- IDE
+    - Xcode
+    - AppCode
+- 调试工具
+    - Charles、Wireshark
+    - Reveal
+    - Instruments
+- 插件
+    - Alcatraz
+    - VVDocument
+    - XVim
+    - FuzzyAutocompletePlugin
+    - KSImageNamed-Xcode
+- 辅助工具
+    - xScope
+    - ImageOptim
+    - 马克鳗
+    - Dash
+    - Deploymate
+    - FauxPas
+    - PaintCode
+- 命令行工具
+    - xcodebuild、xcode-select
+    - nomad
+    - xctool
+    - fastlane
+- 持续集成
+    - Jenkins
+    - Travis CI
+    - Bot
+    
+## 开源项目
+---
+- AFNetworking & Alamofire
+- Masonry
+- SDWebImage
+- SwiftyJSON
+- JSPatch
+- React Native
+## 包管理
+---
+- CocoaPods
+- Carthage
+- Swift Package Manager
+## App 打包上传与审核
+---
+- Apple Developer 网站
+- Itunes Connect 网站
+- IAP
+- 加急审核申请
+- 打包脚本
+## 第三方服务
+---
+- 崩溃收集
+    - Bugly
+    - Crashlytics
+    - BugHD
+- 数据统计
+    - Google Analytics
+    - 友盟
+    - MTA
+    - Flurry
+    - App Annie
+- 应用分发
+    - TestFlight
+    - 蒲公英
+    - FIR

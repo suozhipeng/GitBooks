@@ -232,3 +232,10 @@ SDWebImage与AFNetworking都没有对第7点做优化，FastImageCache相对与�
 
 转载请注明出处哦，我的博客:[luoyibu](http://www.luoyibu.com/)
 
+---
+
+---
+## SDWebImage图片二级缓存异步加载基本原理
+
+
+
