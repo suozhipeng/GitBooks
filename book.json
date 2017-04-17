@@ -1,4 +1,8 @@
 {
 
-    "pluglins":["ace","emphasize","local-video" ]
+    plugins: ["prism", "-highlight"],
+
+    plugins: ["-fontsettings"]
+
+
 }
