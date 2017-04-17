@@ -120,7 +120,8 @@ Websocket的数据传输是frame形式传输的，比如会将一条消息分为
     Application data y bytes  程序数据
 ```
 
-具体的规范，还请看官网的[RFC 6455](https://tools.ietf.org/html/rfc6455)文档给出的详细定义。这里还有一个[翻译版本](https://www.gitbook.com/book/chenjianlong/rfc-6455-websocket-protocol-in-chinese/details)
+具体的规范，还请看官网的[RFC 6455](https://tools.ietf.org/html/rfc6455)文档给出的详细定义。这里还有一个[翻译版本]下面这些是SRWebSocket的一些方法
+(https://www.gitbook.com/book/chenjianlong/rfc-6455-websocket-protocol-in-chinese/details)
 
 ##### 四.WebSocket 和 Socket的区别与联系
 
@@ -178,7 +179,7 @@ If `nil` and `delegateOperationQueue` is `nil`, the socket uses main queue for p
 下面这些是SRWebSocket的一些方法
 
 
-```objectivec
+``` objectivec
 
 // Protocols should be an array of strings that turn into Sec-WebSocket-Protocol.
 - (instancetype)initWithURLRequest:(NSURLRequest *)request;
@@ -224,7 +225,7 @@ Send a UTF-8 string or binary data to the server.
 
 对应5种状态的代理方法
 
-```
+```objectivec
 ///--------------------------------------
 #pragma mark - SRWebSocketDelegate
 ///--------------------------------------
@@ -247,7 +248,7 @@ Send a UTF-8 string or binary data to the server.
 
 先是初始化Websocket连接，注意此处ws://或者wss://连接有且最多只能有一个，这个是Websocket协议规定的
 
-```
+```objectivec
     self.ws = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@:%zd/ws", serverProto, serverIP, serverPort]]]];
     self.ws.delegate = delegate;
     [self.ws open];
@@ -255,14 +256,14 @@ Send a UTF-8 string or binary data to the server.
 
 发送消息
 
-```
+```objectivec
     [self.ws send:message];
 
 ```
 
 接收消息以及其他3个代理方法
 
-```
+``` objectivec
 //这个就是接受消息的代理方法了，这里接受服务器返回的数据，方法里面就应该写处理数据，存储数据的方法了。
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message
 {
