@@ -2,7 +2,8 @@
 
     "plugins": ["prism", 
                 "-highlight",
-                "-fontsettings"]
+                "-fontsettings",
+                "gitbook-plugin-ace"]
 
 
 }
