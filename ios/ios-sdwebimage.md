@@ -1,6 +1,8 @@
 # SDWebImage图片二级缓存异步加载基本原理
 
-[原文链接](http://blog.csdn.net/cordova/article/details/54708029)
+[原文链接](http://blog.csdn.net/cordova/article/details/54708029)：http://blog.csdn.net/cordova/article/details/54708029
+
+链接2：http://www.jianshu.com/p/f14b17467dd9#
 
 ---
 
