@@ -1,5 +1,5 @@
 {
-{/*/## gitbook install .*/}
+
     "plugins": ["prism", 
                 "-highlight",
                 "-fontsettings",
