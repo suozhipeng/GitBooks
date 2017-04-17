@@ -41,7 +41,7 @@
   * [Interview-iOS-09](ios/interview-ios-09.md)
   * [Interview-iOS-谈谈面试](interview/interview-iostan-tan-mian-shi.md)
   * [Interview-iOS-前篇](interview/interview-iosqian-pian.md)
-  * [Interview-iOS-中篇](interview-ioszhong-pian.md)
+  * [Interview-iOS-中篇](interview/interview-ioszhong-pian.md)
   * [Interview-iOS-后篇](interview/interview-ioshou-pian.md)
 * [其他](other/qi-ta.md)
   * [项目命名](other/xiang-mu-ming-ming.md)
