@@ -1,8 +1,8 @@
 {
 
-    plugins: ["prism", "-highlight"],
+    "plugins": ["prism", "-highlight"],
 
-    plugins: ["-fontsettings"]
+    "plugins": ["-fontsettings"]
 
 
 }
