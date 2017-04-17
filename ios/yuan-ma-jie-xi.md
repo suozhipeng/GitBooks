@@ -10,7 +10,10 @@ _推荐博客：_
 [系列链接](http://blog.csdn.net/cordova/article/category/6128968/1)
 
 ---
+## iOS算法目录合集
+原文链接：http://www.jianshu.com/p/4f8e4071f85b
 
+---
 ## 源码笔记---MBProgressHUD
 [2015-08]
 [原文链接](http://www.jianshu.com/p/485b8d75ccd4#)
