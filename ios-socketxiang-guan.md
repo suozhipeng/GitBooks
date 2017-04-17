@@ -66,7 +66,7 @@ NSOutputStream：NSSTream的子类，用于写输出。
 
 服务端先不提，客户端代码大概如下：
 
-```
+```objectivec
 //需要导入<arpa/inet.h>，<netdb.h>
 - (void)test
 {
@@ -114,7 +114,7 @@ NSLog(@"连接成功");
 
 iOS的socket实现是特别简单的，可以使用用github的开源类库[cocoaasyncsocket](https://github.com/robbiehanson/CocoaAsyncSocket)简化开发，cocoaasyncsocket是支持tcp和ump的。代码大概如下：
 
-```
+```objectivec
 - (IBAction)connectToServer:(id)sender {
 // 1.与服务器通过三次握手建立连接
 NSString *host = @"133.33.33.1";
