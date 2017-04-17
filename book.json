@@ -3,7 +3,7 @@
     "plugins": ["prism", 
                 "-highlight",
                 "-fontsettings",
-                "gitbook-plugin-ace"]
+                "ace"]
 
 
 }
