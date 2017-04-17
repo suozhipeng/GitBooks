@@ -50,7 +50,7 @@
   * [nginx、swoole高并发原理](other/nginxswoolegao-bing-fa-yuan-li.md)
   * [OSI七层模型和TCP/IP四层模型](other/osiqi-ceng-mo-xing-wang-luo-he-tcp-ip.md)
   * [代码规范](other/dai-ma-gui-fan.md)
-  * [TCP协议三次握手](tcpxie-yi-san-ci-wo-shou.md)
+  * [TCP协议三次握手](other/tcpxie-yi-san-ci-wo-shou.md)
 * [Tools IDE工具使用](tools/tools.md)
   * [Xcode](tools/xcode.md)
   * [Mac](tools/mac.md)
