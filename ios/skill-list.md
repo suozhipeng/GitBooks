@@ -1,10 +1,10 @@
-## 目录
+# 目录
 
 原文链接：[http://www.jianshu.com/p/437428330df3](http://www.jianshu.com/p/437428330df3)
 
 ---
 
-[前言：程序的演化，从二进制到整个世界](http://www.jianshu.com/p/7593bf463ab6)
+## [前言：程序的演化，从二进制到整个世界](http://www.jianshu.com/p/7593bf463ab6)
 
 1. Hello World在更早之前
 2. 图灵和冯·诺伊曼
@@ -12,7 +12,7 @@
 4. 来到现在
 5. 关于此书
 
-[第一章 重新认识Objective-C](http://www.jianshu.com/p/74eb039b28e3)
+### [第一章 重新认识Objective-C](http://www.jianshu.com/p/74eb039b28e3)
 
 1. OC的起源
 2. OC的特性
@@ -54,24 +54,27 @@
 
    5.2 轮播图中的NSTimer问题
 
-   5.3 main函数的运行
-
+   5.3 main函数的运行  **Runloop**
    1. 事件响应链
    2. 引用计数器（ARC 和 MRC）
    3. 深浅复制和属性为copy，strong时值的变化
    4. 生命周期
    5. 与其他动态语言比较
 
-第二章 细节还是细节
+## [第二章 细节还是细节](http://www.jianshu.com/p/0396633936ef)
 
 1. Block和Delegate的使用
 
    1.1 Delegate
 
    1.2 Block
+   > 
+   循环引用的问题： __weak typeof(self) weakSelf = self;
 
    1.3 Block和Delegate的区别
-
+   > 
+   - 公共接口和方法较多用delegate进行解耦:tableViewDelegate，textViewDelegate等
+   - 异步和简单的回调用block更好，如常用的网络库AFNetwork等。
 2. OC中的Class
 
    2.1 类对象（class object）
@@ -88,9 +91,32 @@
 
 4. iOS视图生命周期
 5. NSNotification效率问题
+> 
+**重定向的实现思路**
+
 6. KVO，NSNotification，delegate及block区别
+> 
+**NSNotification是通知，也是一对多的使用场景。**
+**block是delegate的另一种形式，是函数式编程的一种形式。**
+**delegate是一对一关系。**
+**KVO可以监测一个值的变化，比如View的高,
+   KVO是一对多的关系，一个值的变化会通知所有的观察者。**
 7. \_\_weak
 8. nil、Nil、NULL、NSNull
+> 
+1.NULL就知道这是个C指针，
+2.nil就知道这是个Objective-C对象，
+3.Nil就知道这是个Class类型的数据。
+4.NSNull是一个Objective-C类,它表示的是空值，即什么都不存。
+另外，NULL是C指针指向的值为空；nil是OC对象指针自己本身为空，不是值为空。
+>
+> > 空字符串或数组中一个为空，会打印:<null> ，代表着这是一个空字符串，赋值为空，指针是存在的，只是内容为空。在iOS上，字典/数组 内容为空不能简单的判断str==null（null 在ios上得用[NSNull null]）。
+> ``` objectivec
+if(![location isEqual:[NSNull null]]){
+ NSLog(@"YES");
+}
+```
+
 9. 图像处理中的UI、CG和CI
 
    9.1 UIImage、CGImage和CGImageRef
