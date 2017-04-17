@@ -20,7 +20,7 @@ iOS本地缓存数据方式有五种：
 
 # 方式一：直接写文件
 
-```
+```objectivec
 
 //获取沙盒中缓存文件夹路径
 
@@ -90,7 +90,9 @@ NSLog(@"%@",dic);
 
 打印日志，复制路径打开mac finder，点击左上角菜单前往，前往文件夹，把路径粘贴上去。
 
-```
+```objectivec
+
+
 NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
 NSLog(@"%@",path);
 ```
@@ -105,7 +107,9 @@ NSLog(@"%@",path);
 
 代码示例：
 
-```
+```objectivec
+
+
 //点击button保存数据
 (IBAction)saveData:(id)sender {
 //获取NSUserDefaults对象
@@ -148,7 +152,9 @@ NSLog(@"name = %@ demo =%@",name,demo);
 
 代码示例：
 
-```
+```objectivec
+
+
 先创建一个继承NSObject的类，该类遵守NSCoding协议
 TestPerson.h
 @interface TestPerson : NSObject
@@ -195,7 +201,9 @@ TestPerson.m
 
 这里还要讲一下一个小技巧：使用static修饰来替代宏定义。上面的序列化中，我们可以看到NSCoding的协议方法中对数据进行序列化并且使用一个key来保存它。正常情况下我们可以使用宏来定义key，但是过多的宏定义在编译时也会造成大量的损耗。这时候可以使用static定义静态变量来取代宏定义。
 
-```
+```objectivec
+
+
 static NSString * const kUserNameKey = @"userName";
 让自定义的数据遵循NSCoding协议后，我们就能使用NSKeyedArchiver和NSKeyedUnarchiver来对持久化的数据进行存取操作了:
 -(IBAction)saveData:(id)sender
@@ -267,7 +275,9 @@ coreData是iOS5之后苹果推出的数据持久化框架，其提供了ORM的�
 
 在执行操作的类实现文件中，我们要加入AppDelegate和Person的头文件，因为在创建项目的时候如果我们勾选了use core data的选项，appDelegate文件中会帮我们生成用于管理、存储这些模型的对象，我们可以通过添加头文件来使用。插入数据的代码如下：
 
-```
+```objectivec
+
+
 //先取出coredata上下文管理者
 AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
 NSManagedObjectContext *context = appDelegate.managedObjectContext;
@@ -352,7 +362,9 @@ db=\[FMDatabasedatabaseWithPath:database\_path\];
 
 [创建表：](http://www.jianshu.com/p/72c12b0e55f3)
 
-```
+```objectivec
+
+
 if([dbopen]){
     NSString*sqlCreateTable=[NSStringstringWithFormat:@"CREATETABLEIFNOTEXISTS'%@'('%@'INTEGERPRIMARYKEYAUTOINCREMENT,'%@'TEXT,'%@'INTEGER,'%@'TEXT)",TABLENAME,ID,NAME,AGE,ADDRESS];
     BOOLres=[dbexecuteUpdate:sqlCreateTable];
@@ -368,7 +380,9 @@ if([dbopen]){
 
 添加数据：
 
-```
+```objectivec
+
+
 if([dbopen]){
     NSString*insertSql1=[NSStringstringWithFormat:
                          @"INSERTINTO'%@'('%@','%@','%@')VALUES('%@','%@','%@')",
@@ -389,7 +403,9 @@ if([dbopen]){
 
 修改数据：
 
-```
+```objectivec
+
+
 if([dbopen]){
     NSString*updateSql=[NSStringstringWithFormat:
                         @"UPDATE'%@'SET'%@'='%@'WHERE'%@'='%@'",
@@ -406,7 +422,9 @@ if([dbopen]){
 
 删除数据：
 
-```
+```objectivec
+
+
 if([dbopen]){
     NSString*deleteSql=[NSStringstringWithFormat:
                         @"deletefrom%@where%@='%@'",
@@ -424,7 +442,9 @@ if([dbopen]){
 
 数据库查询操作：
 
-```
+```objectivec
+
+
 //查询操作使用了executeQuery，并涉及到FMResultSet。
 if([dbopen]){
     NSString*sql=[NSStringstringWithFormat:
@@ -449,7 +469,9 @@ FMDB的FMResultSet提供了多个方法来获取不同类型的数据：
 
 如果应用中使用了多线程操作数据库，那么就需要使用FMDatabaseQueue来保证线程安全了。 应用中不可在多个线程中共同使用一个FMDatabase对象操作数据库，这样会引起数据库数据混乱。 为了多线程操作数据库安全，FMDB使用了FMDatabaseQueue，使用FMDatabaseQueue很简单，首先用一个数据库文件地址来初使化FMDatabaseQueue，然后就可以将一个闭包\(block\)传入inDatabase方法中。 在闭包中操作数据库，而不直接参与FMDatabase的管理。
 
-```
+```objectivec
+
+
 FMDatabaseQueue * queue = [FMDatabaseQueue databaseQueueWithPath:database_path];
 
 dispatch_queue_tq1=dispatch_queue_create("queue1",NULL);
