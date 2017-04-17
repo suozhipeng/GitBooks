@@ -42,16 +42,12 @@ OC中copy的作用是：利用一个源对象产生一个副本对象
 ```
 2、mutableCopy : 需要遵守NSMutableCopying协议，实现mutableCopyWithZone:方法
 
-```objectivec
-
+```objectivec 
 @protocol NSMutableCopying
-
 - (id)mutableCopyWithZone:(NSZone *)zone;
-
 @end 
+
 ```
-
-
 
 **深复制和浅复制的区别：**
 
@@ -101,7 +97,8 @@ OC中copy的作用是：利用一个源对象产生一个副本对象
 
 
 
-```
+```objectivec
+
 /**
  NSMutableString调用mutableCopy ： 深复制
  */
@@ -265,7 +262,8 @@ void stringCopy()
 
 a、
 
-```
+```objectivec
+
 NSMutableString *str1=[NSMutableString stringWithString:@"two day"];
    NSMutableString *str2=[str1   retain];
 [str1  release];
@@ -273,7 +271,8 @@ NSMutableString *str1=[NSMutableString stringWithString:@"two day"];
 
 b、
 
-```
+```objectivec
+
    NSArray *array1= [NSArray arrayWithObjects:@"a",@"b",@"c",@"d",nil];
    NSArray  *str2=[array1 Copy];
    [array1 release];
@@ -291,275 +290,253 @@ b、
 
 亲爱的读者朋友，下面是我用于验证的详细代码。对于验证还能得出什么结论，我希望朋友们能自己多多发掘一下。这里只做以上几点总结。对于本文有任何疑问请与我联系，欢迎指出本文不足的地方，谢谢！
 
-```
- #import
-<
-Foundation/Foundation.h
->
+```objectivec
+#import
+<Foundation/Foundation.h>
 
 
 int main (int argc, const char * argv[])
 
 {
-
+    
     @autoreleasepool {
-
-
-
-    ===========================第一种：非容器类不可变对象==================
-
-
+ 
+        ===========================第一种：非容器类不可变对象==================
 
         NSString *str1=@"one day";
-
-
-
-          printf("\n初始化赋值引用计数为::::%lu",str1.retainCount);
-
+  
+        printf("\n初始化赋值引用计数为::::%lu",str1.retainCount);
+        
         NSString *strCopy1=[str1 retain];
-
-          printf("\n继续retain引用计数为:::%lu",str1.retainCount);
-
+        
+        printf("\n继续retain引用计数为:::%lu",str1.retainCount);
+        
         NSString *strCopy2=[str1 copy];
-
-          printf("\n继续copy后引用计数为::::%lu",str1.retainCount);
-
+        
+        printf("\n继续copy后引用计数为::::%lu",str1.retainCount);
+        
         NSString *strCopy3=[str1 mutableCopy];
-
-                printf("\n继续mutableCopy后为:::%lu\n",str1.retainCount);
-
-
-
+        
+        printf("\n继续mutableCopy后为:::%lu\n",str1.retainCount);
+        
+        
+        
         printf("\n非容器类不可变对象\n原始地址::::::::::%p",str1);
-
+        
         printf("\nretain复制::::::::%p",strCopy1);
-
+        
         printf("\ncopy复制::::::::::%p",strCopy2);
-
+        
         printf("\nmutableCopy复制:::%p",strCopy3);
-
-    //这里说明该类型不存在引用计数的概念
-
-  // 初始化赋值引用计数为：18446744073709551615
-
-  // 继续retain引用计数为：18446744073709551615
-
-  // 继续copy后引用计数为：18446744073709551615
-
-  // 继续mutableCopy后为：18446744073709551615
-
- 小提示：这里很多人都说是赋值，所以就好解释这里没引用计数的概念。而且也能解释为什么
-
-         NSString *strCopy2=[str1 copy];
-
-         NSMutableString  *strCopy2=[str1 copy]; 
-
-         这样都不会报错的原因了。那既然只是简单赋值为什么要这么麻烦呢，直接
-
-         NSString *strCopy2=*str1;
-
-         NSMutableString  *strCopy2=*str1;
-
-         其实大家都看出来了，这里是指针变量，只存在“指针的复制”，
-
-         跟赋值概念完全不同，虽然这里看起来很像。
-
-         原来该类型是字符串常量时，系统会为我们优化，声明了多个字符串，
-
-              但是都是常量，且内容相等，那么系统就只为我们申请一块空间。
-
-  疑问： 深复制=浅复制+赋值吗？ 
-
-         赋值过程：输入数据→寄存器处理→开辟内存→写入数据。
-
-         一次深复制，可以得到被复制对象指针，并进行一次赋值操作。
-
-   //非容器类不可变对象
-
-   //原始地址::::::::::0x1000033d0
-
-   //retain复制::::::::0x1000033d0//浅复制
-
-   //copy复制::::::::::0x1000033d0//浅复制
-
-   //mutableCopy复制:::0x10010c420//深复制
-
-
-
-      printf("\n");
-```
-
-==============================**第二种：容器类不可变对象=================**
-
-```
-   NSArray *array1= [NSArray arrayWithObjects:@"a",@"b",@"c",@"d",nil];
-
-
-
-          printf("\n初始化赋值引用计数为::::::::::::%lu",array1.retainCount);
-
+        
+        //这里说明该类型不存在引用计数的概念
+        
+        // 初始化赋值引用计数为：18446744073709551615
+        
+        // 继续retain引用计数为：18446744073709551615
+        
+        // 继续copy后引用计数为：18446744073709551615
+        
+        // 继续mutableCopy后为：18446744073709551615
+        
+        小提示：这里很多人都说是赋值，所以就好解释这里没引用计数的概念。而且也能解释为什么
+        
+        NSString *strCopy2=[str1 copy];
+        
+        NSMutableString *strCopy2=[str1 copy];
+        
+        这样都不会报错的原因了。那既然只是简单赋值为什么要这么麻烦呢，直接
+        
+        NSString *strCopy2=*str1;
+        
+        NSMutableString *strCopy2=*str1;
+        
+        其实大家都看出来了，这里是指针变量，只存在“指针的复制”，
+        
+        跟赋值概念完全不同，虽然这里看起来很像。
+        
+        原来该类型是字符串常量时，系统会为我们优化，声明了多个字符串，
+        
+        但是都是常量，且内容相等，那么系统就只为我们申请一块空间。
+        
+        疑问： 深复制=浅复制+赋值吗？
+        
+        赋值过程：输入数据→寄存器处理→开辟内存→写入数据。
+        
+        一次深复制，可以得到被复制对象指针，并进行一次赋值操作。
+        
+        //非容器类不可变对象
+        
+        //原始地址::::::::::0x1000033d0
+        
+        //retain复制::::::::0x1000033d0//浅复制
+        
+        //copy复制::::::::::0x1000033d0//浅复制
+        
+        //mutableCopy复制:::0x10010c420//深复制
+        
+        
+        
+        printf("\n");
+        
+        
+        ==============================**第二种：容器类不可变对象=================**
+        
+        
+        NSArray *array1= [NSArray arrayWithObjects:@"a",@"b",@"c",@"d",nil];
+        
+        
+        
+        printf("\n初始化赋值引用计数为::::::::::::%lu",array1.retainCount);
+        
         NSArray *arrayCopy1 = [array1 retain];
-
-          printf("\n继续retain后引用计数为:::::::::%lu",array1.retainCount);
-
+        
+        printf("\n继续retain后引用计数为:::::::::%lu",array1.retainCount);
+        
         NSArray *arrayCopy2 = [array1 copy];
-
-          printf("\n继续copy后引用计数为:::::::::::%lu",array1.retainCount);
-
+        
+        printf("\n继续copy后引用计数为:::::::::::%lu",array1.retainCount);
+        
         NSArray *arrayCopy3 = [array1 mutableCopy];
-
-          printf("\n继续mutableCopy后引用计数为::::%lu\n",array1.retainCount);
-
-
-
-    printf("\n容器类不可变数组\n原始地址::::::::::%p\t\t%p",array1,[array1 objectAtIndex:1]);
-
+        
+        printf("\n继续mutableCopy后引用计数为::::%lu\n",array1.retainCount);
+        
+        
+        
+        printf("\n容器类不可变数组\n原始地址::::::::::%p\t\t%p",array1,[array1 objectAtIndex:1]);
+        
         printf("\nretain复制::::::::%p\t%p",arrayCopy1,[arrayCopy1 objectAtIndex:1]);
-
+        
         printf("\ncopy复制::::::::::%p\t%p",arrayCopy2,[arrayCopy2 objectAtIndex:1]);
-
+        
         printf("\nmutableCopy复制:::%p\t%p",arrayCopy3,[arrayCopy3 objectAtIndex:1]);
 
-
-
-
-
-    //初始化赋值引用计数为::::::::::::1
-
-    //继续retain后引用计数为:::::::::2
-
-    //继续copy后引用计数为:::::::::::3
-
-    //继续mutableCopy后引用计数为::::3
-
-    //容器类不可变数组
-
-    //原始地址::::::::::0x10010c6b0 0x100003410
-
-    //retain复制::::::::0x10010c6b0 0x100003410//浅复制
-
-    //copy复制::::::::::0x10010c6b0 0x100003410//浅复制
-
-    //mutableCopy复制:::0x10010c760 0x100003410//深复制
-
-
-
+        //初始化赋值引用计数为::::::::::::1
+        
+        //继续retain后引用计数为:::::::::2
+        
+        //继续copy后引用计数为:::::::::::3
+        
+        //继续mutableCopy后引用计数为::::3
+        
+        //容器类不可变数组
+        
+        //原始地址::::::::::0x10010c6b0 0x100003410
+        
+        //retain复制::::::::0x10010c6b0 0x100003410//浅复制
+        
+        //copy复制::::::::::0x10010c6b0 0x100003410//浅复制
+        
+        //mutableCopy复制:::0x10010c760 0x100003410//深复制
+        
+        
+        
         printf("\n");
-```
-
-** ===============第三种：非容器类可变对象==================**
-
-```
- NSMutableString *str2=[NSMutableString stringWithString:@"two day"];
-
-
-
-          printf("\n初始化赋值引用计数为::::::::::::%lu",str2.retainCount);
-
+        
+        
+        ** ===============第三种：非容器类可变对象==================**
+        
+        
+        NSMutableString *str2=[NSMutableString stringWithString:@"two day"];
+        
+        
+        
+        printf("\n初始化赋值引用计数为::::::::::::%lu",str2.retainCount);
+        
         NSMutableString *strCpy1=[str2 retain];
-
-          printf("\n继续retain后引用计数为:::::::::%lu",str2.retainCount);
-
+        
+        printf("\n继续retain后引用计数为:::::::::%lu",str2.retainCount);
+        
         NSMutableString *strCpy2=[str2 copy];
-
-          printf("\n继续copy后引用计数为:::::::::::%lu",str2.retainCount);
-
+        
+        printf("\n继续copy后引用计数为:::::::::::%lu",str2.retainCount);
+        
         NSMutableString *strCpy3=[str2 mutableCopy];
-
+        
         printf("\n继续mutableCopy后引用计数为::::%lu\n",str2.retainCount);
-
+        
         printf("\n非容器类可变对象\n原始地址::::::::::%p",str2);
-
+        
         printf("\nretin复制::::::::%p",strCpy1);
-
+        
         printf("\ncopy复制::::::::::%p",strCpy2);
-
+        
         printf("\nmutableCopy复制:::%p",strCpy3);
-
-         //初始化赋值引用计数为::::::::::::1
-
-         //继续retain后引用计数为:::::::::2
-
-         //继续copy后引用计数为:::::::::::2
-
-         //继续mutableCopy后引用计数为::::2
-
-         //非容器类可变对象
-
-         //原始地址::::::::::0x10010c560
-
-         //retain复制::::::::0x10010c560//浅复制
-
-         //copy复制::::::::::0x100102720//深复制
-
-       //mutableCopy复制:::0x10010c880//深复制
-
-
-
+        
+        //初始化赋值引用计数为::::::::::::1
+        
+        //继续retain后引用计数为:::::::::2
+        
+        //继续copy后引用计数为:::::::::::2
+        
+        //继续mutableCopy后引用计数为::::2
+        
+        //非容器类可变对象
+        
+        //原始地址::::::::::0x10010c560
+        
+        //retain复制::::::::0x10010c560//浅复制
+        
+        //copy复制::::::::::0x100102720//深复制
+        
+        //mutableCopy复制:::0x10010c880//深复制
+        
+        
+        
         printf("\n");
-```
-
-=========================**第四种：容器类可变对象======================**
-
-```
- NSMutableArray *array2   = [NSMutableArray arrayWithObjects:@"aa",@"bb",@"cc",@"dd",nil];
-
-
-
-         printf("\n初始化赋值引用计数为::::::::::%lu",array2.retainCount);
-
-       NSMutableArray *arrayCpy1 = [array2 retain];
-
-         printf("\n继续retain后引用计数为:::::::%lu",array2.retainCount);
-
-       NSMutableArray *arrayCpy2=[array2 copy];
-
-         printf("\n继续copy后引用计数为:::::::::%lu",array2.retainCount);
-
-       NSMutableArray *arrayCpy3 = [array2 mutableCopy];
-
-         printf("\n继续mutableCopy后引用计数为::%lu\n",array2.retainCount);
-
-
-
-       printf("\n容器类可变数组\n原始地址:::::::::::%p\t%p",array2,[array2 objectAtIndex:1]);
-
-       printf("\nretain复制:::::::::%p\t%p",arrayCpy1,[arrayCpy1 objectAtIndex:1]);
-
-       printf("\ncopy复制:::::::::::%p\t%p",arrayCpy2,[arrayCpy2 objectAtIndex:1]);
-
-       printf("\nnmutableCopy复制:::%p\t%p",arrayCpy3,[arrayCpy3 objectAtIndex:1]);
-
-
-
-
-
-         //初始化赋值引用计数为::::::::::1
-
-         //继续retain后引用计数为:::::::2
-
-         //继续copy后引用计数为:::::::::2
-
-         //继续mutableCopy后引用计数为::2
-
-         //容器类可变数组
-
-         //原始地址:::::::::::0x10010e6c0 0x1000034b0
-
-         //retain复制:::::::::0x10010e6c0 0x1000034b0//浅复制
-
-         //copy复制:::::::::::0x10010e790 0x1000034b0//深复制
-
-         //nmutableCopy复制:::0x10010e7c0 0x1000034b0//深复制
-
-
-
-
-
+        
+        
+        =========================**第四种：容器类可变对象======================**
+        
+        
+        NSMutableArray *array2 = [NSMutableArray arrayWithObjects:@"aa",@"bb",@"cc",@"dd",nil];
+        
+        
+        
+        printf("\n初始化赋值引用计数为::::::::::%lu",array2.retainCount);
+        
+        NSMutableArray *arrayCpy1 = [array2 retain];
+        
+        printf("\n继续retain后引用计数为:::::::%lu",array2.retainCount);
+        
+        NSMutableArray *arrayCpy2=[array2 copy];
+        
+        printf("\n继续copy后引用计数为:::::::::%lu",array2.retainCount);
+        
+        NSMutableArray *arrayCpy3 = [array2 mutableCopy];
+        
+        printf("\n继续mutableCopy后引用计数为::%lu\n",array2.retainCount);
+        
+        printf("\n容器类可变数组\n原始地址:::::::::::%p\t%p",array2,[array2 objectAtIndex:1]);
+        
+        printf("\nretain复制:::::::::%p\t%p",arrayCpy1,[arrayCpy1 objectAtIndex:1]);
+        
+        printf("\ncopy复制:::::::::::%p\t%p",arrayCpy2,[arrayCpy2 objectAtIndex:1]);
+        
+        printf("\nnmutableCopy复制:::%p\t%p",arrayCpy3,[arrayCpy3 objectAtIndex:1]);
+ 
+        //初始化赋值引用计数为::::::::::1
+        
+        //继续retain后引用计数为:::::::2
+        
+        //继续copy后引用计数为:::::::::2
+        
+        //继续mutableCopy后引用计数为::2
+        
+        //容器类可变数组
+        
+        //原始地址:::::::::::0x10010e6c0 0x1000034b0
+        
+        //retain复制:::::::::0x10010e6c0 0x1000034b0//浅复制
+        
+        //copy复制:::::::::::0x10010e790 0x1000034b0//深复制
+        
+        //nmutableCopy复制:::0x10010e7c0 0x1000034b0//深复制
+  
     }
-
+    
     return 0;
-
+    
 }
 ```
 
