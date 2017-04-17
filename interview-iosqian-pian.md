@@ -138,26 +138,10 @@ OSX/iOS 系统中，提供了两个这样的对象：NSRunLoop 和 CFRunLoopRef�
 主线程的run loop默认是启动的。iOS的应用程序里面，程序启动后会有一个如下的main\(\) 函数：
 
 ```
-int
- main(
-int
- argc, 
-char
- *argv[])
+ int main(int argc, char *argv[])
  {
-
-@autoreleasepool
- {
-
-return
-UIApplicationMain
-(argc, argv, 
-nil
-, 
-NSStringFromClass
-([appDelegate 
-class
-]));
+        @autoreleasepool {
+          return UIApplicationMain(argc, argv, nil, NSStringFromClass([appDelegate class]));
        }
   }
 ```
@@ -167,10 +151,8 @@ class
 对其它线程来说，run loop默认是没有启动的，如果你需要更多的线程交互则可以手动配置和启动，如果线程只是去执行一个长时间的已确定的任务则不需要。在任何一个Cocoa程序的线程中，都可以通过：
 
 ```
-NSRunLoop
-   *runloop = [
-NSRunLoop
- currentRunLoop];
+NSRunLoop   *runloop = [NSRunLoop currentRunLoop];
+
 ```
 
 来获取到当前线程的run loop。
@@ -198,10 +180,8 @@ Cocoa中使用任何performSelector…的方法
    我们不能再一个线程中去操作另外一个线程的run loop对象，那很可能会造成意想不到的后果。不过幸运的是CoreFundation中的不透明类CFRunLoopRef是线程安全的，而且两种类型的run loop完全可以混合使用。Cocoa中的NSRunLoop类可以通过实例方法：
 
    ```
-    - (
-   CFRunLoopRef
-   )getCFRunLoop
-   ;
+    - (CFRunLoopRef)getCFRunLoop;
+
    ```
 
    获取对应的CFRunLoopRef类，来达到线程安全的目的。
@@ -211,15 +191,10 @@ Cocoa中使用任何performSelector…的方法
 
    ```
    BOOL isRunning = NO;
+   do {
+        isRunning = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDatedistantFuture]];
+   } while (isRunning);
 
-   do
-    {
-        isRunning = 
-   [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDatedistantFuture]]
-   ;
-   } 
-   while
-    (isRunning);
    ```
 
 3. Run loop同时也负责autorelease pool的创建和释放  
@@ -268,30 +243,12 @@ GCD 确实好用 ，很强大，相比NSOpretion 无法提供 取消任务的功
 如此强大的工具用不好可能会出现线程死锁。 如下代码：
 
 ```
-- (
-void
-)viewDidLoad{ 
-[
-super
- viewDidLoad];     
-
-NSLog
-(
-@"=================4"
-);
-
-dispatch_sync
-(dispatch_get_main_queue(), 
-             ^{ 
-NSLog
-(
-@"=================5"
-); }); 
-
-NSLog
-(
-@"=================6"
-);
+- (void)viewDidLoad{ 
+[super viewDidLoad];     
+NSLog(@"=================4");
+dispatch_sync(dispatch_get_main_queue(), 
+             ^{ NSLog(@"=================5"); }); 
+NSLog(@"=================6");
 }
 ```
 
@@ -313,37 +270,13 @@ viewDidLoad 在主线程中， 及在dispatch\_get\_main\_queue\(\) 中，执行
 dispatch\_get\_main\_queue\(\)插入 同步 threed。sync 会等到 后面block 执行完成才返回， sync 又再 dispatch\_get\_main\_queue\(\) 队列中，它是串行队列，sync 是后加入的，前一个是主线程，所以 sync 想执行 block 必须等待主线程执行完成，主线程等待 sync 返回，去执行后续内容。照成死锁，sync 等待mainThread 执行完成， mianThread 等待sync 函数返回。下面例子：
 
 ```
-- (
-void
-)viewDidLoad{ 
-[
-super
- viewDidLoad]; 
-
-dispatch_async
-(dispatch_get_global_queue(
-0
-, 
-0
-), ^{ 
-
-NSLog
-(
-@"=================1"
-);
-
-dispatch_sync
-(dispatch_get_main_queue(), ^{ 
-
-NSLog
-(
-@"=================2"
-); }); 
-
-NSLog
-(
-@"=================3"
-); });
+- (void)viewDidLoad{ 
+[super viewDidLoad]; 
+dispatch_async(dispatch_get_global_queue(0, 0), ^{ 
+               NSLog(@"=================1");
+              dispatch_sync(dispatch_get_main_queue(), ^{ 
+              NSLog(@"=================2"); }); 
+NSLog(@"=================3"); });
 }
 ```
 
@@ -359,14 +292,8 @@ NSLog
 2.应尽量避免在 where 子句中对字段进行 null 值判断，否则将导致引擎放弃使用索引而进行全表扫描，如：
 
 ```
-select
-id
-from
- t 
-where
-num
-is
-null
+ select id from t where num is null
+
 ```
 
 最好不要给数据库留NULL，尽可能的使用 NOT NULL填充数据库.
@@ -378,14 +305,7 @@ null
 可以在num上设置默认值0，确保表中num列没有null值，然后这样查询：
 
 ```
-select
-id
-from
- t 
-where
-num
-=
-0
+select id from t where num=0
 ```
 
 3.应尽量避免在 where 子句中使用 != 或 &lt;&gt; 操作符，否则将引擎放弃使用索引而进行全表扫描。
@@ -393,124 +313,50 @@ num
 4.应尽量避免在 where 子句中使用 or 来连接条件，如果一个字段有索引，一个字段没有索引，将导致引擎放弃使用索引而进行全表扫描，如：
 
 ```
-select
-id
-from
- t 
-where
-num
-=
-10
-or
-Name
-=
-'admin'
+ select id from t where num=10 or Name='admin'
+
 ```
 
 可以这样查询：
 
 ```
-select
-id
-from
- t 
-where
-num
-=
-10
-union
- all 
-select
-id
-from
- t 
-where
-Name
-=
-'admin'
+ select id from t where num=10 union all select id from t where Name='admin'
+
 ```
 
 5.in 和 not in 也要慎用，否则会导致全表扫描，如：
 
 ```
-select
-id
-from
- t 
-where
-num
-in
- (
-1
-,
-2
-,
-3
-)
+select id from t where num in (1,2,3)
+
 ```
 
 对于连续的数值，能用 between 就不要用 in 了：
 
 ```
-select
-id
-from
- t 
-where
-num
-between
-1
-and
-3
+ select id from t where num between 1 and 3
+
 ```
 
 很多时候用 exists 代替 in 是一个好的选择：
 
 ```
-select
-num
-from
- a 
-where
-num
-in
- (
-select
-num
-from
- b)
+ select num from a where num in (select num from b)
+
 ```
 
 用下面的语句替换：
 
 ```
-select
-num
-from
- a 
-where
-exists
- (
-select
-1
-from
- b 
-where
-num
-=a.num)
+ select num from a where exists (select 1 from b where num=a.num)
+
 ```
 
 6.下面的查询也将导致全表扫描：
 
 ```
-select
-id
-from
- t 
-where
-name
-like
- ‘%abc%’
+select id from t where name like ‘%abc%’
+
 ```
 
 若要提高效率，可以考虑全文检索。
@@ -518,128 +364,44 @@ like
 7.如果在 where 子句中使用参数，也会导致全表扫描。因为SQL只有在运行时才会解析局部变量，但优化程序不能将访问计划的选择推迟到运行时；它必须在编译时进行选择。然 而，如果在编译时建立访问计划，变量的值还是未知的，因而无法作为索引选择的输入项。如下面语句将进行全表扫描：
 
 ```
-select
-id
-from
- t 
-where
-num
-=@
-num
+select id from t where num=@num
+
 ```
 
 可以改为强制查询使用索引：
 
 ```
-select
-id
-from
- t 
-with
- (
-index
-(索引名)) 
-where
-num
-=@
-num
+select id from t with (index(索引名)) where num=@num
+
 ```
 
 应尽量避免在 where 子句中对字段进行表达式操作，这将导致引擎放弃使用索引而进行全表扫描。如：
 
 ```
-select
-id
-from
- t 
-where
-num
-/
-2
-=
-100
+select id from t where num/2=100
+
 ```
 
 应改为:
 
 ```
-select
-id
-from
- t 
-where
-num
-=
-100
-*
-2
+select id from t where num=100*2
+
 ```
 
 9.应尽量避免在where子句中对字段进行函数操作，这将导致引擎放弃使用索引而进行全表扫描。如：
 
 ```
-select
-id
-from
- t 
-where
-substring
-(
-name
-,
-1
-,
-3
-)=’abc’ -–
-name
-以abc开头的
-id
-select
-id
-from
- t 
-where
-datediff
-(
-day
-,createdate,’
-2015
--11
--30
-′)=
-0
- -–‘
-2015
--11
--30
-’ 
---生成的id
+ select id from t where substring(name,1,3)=’abc’ -–name以abc开头的id
+ select id from t where datediff(day,createdate,’2015-11-30′)=0 -–‘2015-11-30’ --生成的id
 ```
 
 应改为:
 
 ```
-select
-id
-from
- t 
-where
-name
-like
-'abc%'
-select
-id
-from
- t 
-where
- createdate
->
-=
-'2005-11-30'
-and
- createdate
-<
-'2005-12-1'
+select id from t where name like'abc%' 
+select id from t where createdate>='2005-11-30' and createdate<'2005-12-1'
+
 ```
 
 10.不要在 where 子句中的“=”左边进行函数、算术运算或其他表达式运算，否则系统将可能无法正确使用索引。
@@ -649,18 +411,15 @@ and
 12.不要写一些没有意义的查询，如需要生成一个空表结构：
 
 ```
-select
- col1,col2 
-into
-#t from t where1=0
+select col1,col2 into #t from t where1=0
+
 ```
 
 这类代码不会返回任何结果集，但是会消耗系统资源的，应改成这样：
 
 ```
-create 
-table
- #t(…)
+create table #t(…)
+
 ```
 
 13.Update 语句，如果只更改1、2个字段，不要Update全部字段，否则频繁调用会引起明显的性能消耗，同时带来大量日志。
@@ -680,10 +439,8 @@ table
 20.任何地方都不要使用
 
 ```
-select
- * 
-from
- t
+  select * from t
+
 ```
 
 用具体的字段列表代替“\*”，不要返回用不到的任何字段。
@@ -719,31 +476,11 @@ Apache 会有很多的子进程或线程。所以，其工作起来相当有效�
 所以，如果你有一个大的处理，你一定把其拆分，使用 LIMIT oracle\(rownum\),sqlserver\(top\)条件是一个好的方法。下面是一个mysql示例：
 
 ```
-while(
-1
-){
-//每次只做1000条
-
-mysql_query(“delete from logs where log_date 
-<
-= ’
-2015
--11
--01
-’ limit 
-1000
-”);
-if(mysql_affected_rows() == 
-0
-){
-//删除完成，退出！break；
-
-}
-//每次暂停一段时间，释放表让其他进程/线程访问。
-
-usleep(
-50000
-)
+while(1){//每次只做1000条
+mysql_query(“delete from logs where log_date <= ’2015-11-01’ limit 1000”);
+if(mysql_affected_rows() == 0){//删除完成，退出！break；
+}//每次暂停一段时间，释放表让其他进程/线程访问。
+usleep(50000)
 }
 ```
 
@@ -768,14 +505,9 @@ Pop 语法上和 Core Animation 相似，效果上则不像 Canvas 那么生硬�
 REST是一种架构风格，其核心是面向资源，REST专门针对网络应用设计和开发方式，以降低开发的复杂性，提高系统的可伸缩性。REST提出设计概念和准则为：
 
 ```
-1.
-网络上的所有事物都可以被抽象为资源(resource)
-
-2.
-每一个资源都有唯一的资源标识(resource identifier)，对资源的操作不会改变这些标识
-
-3.
-所有的操作都是无状态的
+  1.网络上的所有事物都可以被抽象为资源(resource)
+  2.每一个资源都有唯一的资源标识(resource identifier)，对资源的操作不会改变这些标识
+  3.所有的操作都是无状态的
 ```
 
 REST简化开发，其架构遵循CRUD原则，该原则告诉我们对于资源\(包括网络资源\)只需要四种行为：创建，获取，更新和删除就可以完成相关的操作和处理。您可以通过统一资源标识符（Universal Resource Identifier，URI）来识别和定位资源，并且针对这些资源而执行的操作是通过 HTTP 规范定义的。其核心操作只有GET,PUT,POST,DELETE。
