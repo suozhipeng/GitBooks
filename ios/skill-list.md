@@ -230,19 +230,19 @@ if(![location isEqual:[NSNull null]]){
 
 5. iOS项目分析及重构
 
-第六章 Hybrid App 从细节到源码分析
+## [第六章 Hybrid App 从细节到源码分析](http://www.jianshu.com/p/e83aa2d1ade3)
+>Hybrid App（混合模式移动应用), 跨平台，ReactNative 
 
-第七章 从OC到React Native
+## [第七章 从OC到React Native](http://www.jianshu.com/p/318342e139c7)
 
 第八章 您好，Swift
 
-第九章 开发中所应关注的其它方面
-
-第十章 设计模式及算法
+## [第九章 开发中所应关注的其它方面](http://www.jianshu.com/p/7acba16fd929)
+## [第十章 设计模式及算法](http://www.jianshu.com/p/4f8e4071f85b)
 
 后记：程序中的24个比利
 
-附录：iOS自学网站
+**[附录：iOS自学网站](http://www.jianshu.com/p/473206f54f9b)**
 
 附录：iOS优秀的第三方库
 
