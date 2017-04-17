@@ -5,7 +5,7 @@ KVO实现机制：[http://www.cnblogs.com/zy1987/p/4616764.html](http://www.cnbl
 
 ---
 
-KVC和KVO都属于键值编程而且底层实现机制都是**isa-swizzing，**都依赖于Runtime的动态机制
+KVC和KVO都属于键值编程而且底层实现机制都是**isa-swizzing，**都依赖于**Runtime**的动态机制
 
 ## **KVC原理**
 
