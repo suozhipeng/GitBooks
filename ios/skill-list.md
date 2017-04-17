@@ -133,7 +133,7 @@ if(![location isEqual:[NSNull null]]){
 
     10.2** 空间复杂度**
 
-第三章 iOS视图成像理论及优化
+## [第三章 iOS视图成像理论及优化](http://www.jianshu.com/p/d3685b4977aa)
 
 1. CRT屏幕成像
 2. 液晶显示器工作原理
