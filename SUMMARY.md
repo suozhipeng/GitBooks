@@ -18,6 +18,7 @@
   * [iOS-Websocket解析](ios/ios-websocketjie-xi.md)
   * [iOS 零碎点](ios/ios-ling-sui-dian.md)
   * [Swift 零碎点](ios/swift-ling-sui-dian.md)
+  * [算法](ios/suan-fa.md)
 * [Interview](interview/interview.md)
   * [Interface-面试Leader](interview/interfacexiang-guan.md)
   * [Interface-关于培训学习的建议](interview/interfaceguan-yu-pei-xun.md)
