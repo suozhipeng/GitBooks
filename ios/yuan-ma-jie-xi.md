@@ -123,7 +123,7 @@ RN开发中，经常遇到的问题和优化
 [原文链接](https://zhuanlan.zhihu.com/p/25582696)   
 使用Facebook 开源的 [KVOController](https://github.com/facebook/KVOController) 框架
 
-```objective-c
+```objectivec
 [self.KVOController observe:self.fizz
 keyPath:@"number"
 options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld

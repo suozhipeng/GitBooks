@@ -26,7 +26,7 @@ pragramming 层面的 runtime 主要体现在以下几个方面：
 **动态获取 class 和 slector**
 
 
-```Objective-C
+```objectivec
 NSClassFromString(@"MyClass");
 NSSelectorFromString(@"showShareActionSheet");
 ```

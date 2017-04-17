@@ -4,10 +4,7 @@
 
 ---
 
-![](http://upload-images.jianshu.io/upload_images/1194012-324588e5f12ae955.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
+![](http://upload-images.jianshu.io/upload_images/1194012-324588e5f12ae955.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
 
 #### 前言
 
@@ -48,22 +45,15 @@
 
 ##### 二.WebSocket诞生由来
 
-1.**最开始的轮询Polling阶段**  
+1.**最开始的轮询Polling阶段**
 
-
-![](http://upload-images.jianshu.io/upload_images/1194012-ce4df238336909a5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
+![](http://upload-images.jianshu.io/upload_images/1194012-ce4df238336909a5.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
 
 这种方式下，是不适合获取实时信息的，客户端和服务器之间会一直进行连接，每隔一段时间就询问一次。客户端会轮询，有没有新消息。这种方式连接数会很多，一个接受，一个发送。而且每次发送请求都会有Http的Header，会很耗流量，也会消耗CPU的利用率。
 
 2.**改进版的长轮询Long polling阶段**
 
-![](http://upload-images.jianshu.io/upload_images/1194012-6ca608d5a37095e6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
+![](http://upload-images.jianshu.io/upload_images/1194012-6ca608d5a37095e6.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
 
 长轮询是对轮询的改进版，客户端发送HTTP给服务器之后，有没有新消息，如果没有新消息，就一直等待。当有新消息的时候，才会返回给客户端。在某种程度上减小了网络带宽和CPU利用率等问题。但是这种方式还是有一种弊端：例如假设服务器端的数据更新速度很快，服务器在传送一个数据包给客户端后必须等待客户端的下一个Get请求到来，才能传递第二个更新的数据包给客户端，那么这样的话，客户端显示实时数据最快的时间为2×RTT（往返时间），而且如果在网络拥塞的情况下，这个时间用户是不能接受的，比如在股市的的报价上。另外，由于http数据包的头部数据量往往很大（通常有400多个字节），但是真正被服务器需要的数据却很少（有时只有10个字节左右），这样的数据包在网络上周期性的传输，难免对网络带宽是一种浪费。
 
@@ -71,19 +61,12 @@
 
 现在急需的需求是能支持客户端和服务器端的双向通信，而且协议的头部又没有HTTP的Header那么大，于是，Websocket就诞生了！
 
-![](http://upload-images.jianshu.io/upload_images/1194012-b88b2623a2e4a8ea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-  
-
+![](http://upload-images.jianshu.io/upload_images/1194012-b88b2623a2e4a8ea.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
 
 上图就是Websocket和Polling的区别，从图中可以看到Polling里面客户端发送了好多Request，而下图，只有一个Upgrade，非常简洁高效。至于消耗方面的比较就要看下图了
 
-![](http://upload-images.jianshu.io/upload_images/1194012-f1f91e25b9635701.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/1194012-f1f91e25b9635701.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
 
-  
-
-
-  
 上图中，我们先看蓝色的柱状图，是Polling轮询消耗的流量，这次测试，HTTP请求和响应头信息开销总共包括871字节。当然每次测试不同的请求，头的开销不同。这次测试都以871字节的请求来测试。  
 **Use case A:**1,000 clients polling every second: Network throughput is \(871 x 1,000\) = 871,000 bytes = 6,968,000 bits per second \(6.6 Mbps\)  
 **Use case B:**10,000 clients polling every second: Network throughput is \(871 x 10,000\) = 8,710,000 bytes = 69,680,000 bits per second \(66 Mbps\)  
@@ -144,12 +127,8 @@ Websocket的数据传输是frame形式传输的，比如会将一条消息分为
 首先，  
 [Socket](http://en.wikipedia.org/wiki/Network_socket)其实并不是一个协议。它工作在 OSI 模型会话层（第5层），是为了方便大家直接使用更底层协议（一般是[TCP](http://en.wikipedia.org/wiki/Transmission_Control_Protocol)或[UDP](http://en.wikipedia.org/wiki/User_Datagram_Protocol)）而存在的一个抽象层。Socket是对TCP/IP协议的封装，Socket本身并不是协议，而是一个调用接口\(API\)。
 
-![](http://upload-images.jianshu.io/upload_images/1194012-d35653654be833ae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/1194012-d35653654be833ae.png?imageMogr2/auto-orient/strip|imageView2/2/w/1240)
 
-  
-
-
-  
 Socket通常也称作”套接字”，用于描述IP地址和端口，是一个通信链的句柄。网络上的两个程序通过一个双向的通讯连接实现数据的交换，这个双向链路的一端称为一个Socket，一个Socket由一个IP地址和一个端口号唯一确定。应用程序通常通过”套接字”向网络发出请求或者应答网络请求。
 
 Socket在通讯过程中，服务端监听某个端口是否有连接请求，客户端向服务端发送连接请求，服务端收到连接请求向客户端发出接收消息，这样一个连接就建立起来了。客户端和服务端也都可以相互发送消息与对方进行通讯，直到双方连接断开。
@@ -159,250 +138,89 @@ Socket在通讯过程中，服务端监听某个端口是否有连接请求，�
 ##### 五.iOS平台有哪些WebSocket和Socket的开源框架
 
 Socket开源框架有：[CocoaAsync_Socket_](https://github.com/robbiehanson/CocoaAsyncSocket)，[socketio/_socket_.io-client-swift](https://github.com/socketio/socket.io-client-swift)  
-WebSocket开源框架有:[facebook/_Socket_Rocket](https://github.com/facebook/SocketRocket)，[tidwall/SwiftWeb_Socket_](https://github.com/tidwall/SwiftWebSocket)
+WebSocket开源框架有:[facebook/\_Socket\_Rocket](https://github.com/facebook/SocketRocket)，[tidwall/SwiftWeb_Socket_](https://github.com/tidwall/SwiftWebSocket)
 
 ##### 六.iOS平台如何实现WebSocket协议
 
 > Talk is cheap。Show me the code ——Linus Torvalds
 
-我们今天来看看[facebook/_Socket_Rocket](https://github.com/facebook/SocketRocket)的实现方法  
+我们今天来看看[facebook/\_Socket\_Rocket](https://github.com/facebook/SocketRocket)的实现方法  
 首先这是SRWebSocket定义的一些成员变量
 
-    @property
-     (
-    nonatomic
-    , 
-    weak
-    ) 
-    id
-    <
-    SRWebSocketDelegate
-    >
-     delegate;
 
-    /**
-     A dispatch queue for scheduling the delegate calls. The queue doesn't need be a serial queue.
+``` objectivec 
+@property (nonatomic, weak) id <SRWebSocketDelegate> delegate;
+/**
+A dispatch queue for scheduling the delegate calls. The queue doesn't need be a serial queue.
 
-     If `nil` and `delegateOperationQueue` is `nil`, the socket uses main queue for performing all delegate method calls.
-     */
-    @property
-     (
-    nonatomic
-    , 
-    strong
-    ) 
-    dispatch_queue_t
-     delegateDispatchQueue;
+If `nil` and `delegateOperationQueue` is `nil`, the socket uses main queue for performing all delegate method calls.
+*/
+@property (nonatomic, strong) dispatch_queue_t delegateDispatchQueue;
+/**
+An operation queue for scheduling the delegate calls.
 
-    /**
-     An operation queue for scheduling the delegate calls.
+If `nil` and `delegateOperationQueue` is `nil`, the socket uses main queue for performing all delegate method calls.
+*/
+@property (nonatomic, strong) NSOperationQueue *delegateOperationQueue;
+@property (nonatomic, readonly) SRReadyState readyState;
+@property (nonatomic, readonly, retain) NSURL *url;
+@property (nonatomic, readonly) CFHTTPMessageRef receivedHTTPHeaders;
+// Optional array of cookies (NSHTTPCookie objects) to apply to the connections
+@property (nonatomic, copy) NSArray<NSHTTPCookie *> *requestCookies;
 
-     If `nil` and `delegateOperationQueue` is `nil`, the socket uses main queue for performing all delegate method calls.
-     */
-    @property
-     (
-    nonatomic
-    , 
-    strong
-    ) 
-    NSOperationQueue
-     *delegateOperationQueue;
-
-    @property
-     (
-    nonatomic
-    , 
-    readonly
-    ) SRReadyState readyState;
-
-    @property
-     (
-    nonatomic
-    , 
-    readonly
-    , 
-    retain
-    ) 
-    NSURL
-     *url;
-
-    @property
-     (
-    nonatomic
-    , 
-    readonly
-    ) 
-    CFHTTPMessageRef
-     receivedHTTPHeaders;
-
-    // Optional array of cookies (NSHTTPCookie objects) to apply to the connections
-    @property
-     (
-    nonatomic
-    , 
-    copy
-    ) 
-    NSArray
-    <
-    NSHTTPCookie
-     *
-    >
-     *requestCookies;
+// This returns the negotiated protocol.
+// It will be nil until after the handshake completes.
+@property (nonatomic, readonly, copy) NSString *protocol;
+```
 
 
-    // This returns the negotiated protocol.
-    // It will be nil until after the handshake completes.
-    @property
-     (
-    nonatomic
-    , 
-    readonly
-    , 
-    copy
-    ) 
-    NSString
-     *protocol;
 
 下面这些是SRWebSocket的一些方法
 
-    // Protocols should be an array of strings that turn into Sec-WebSocket-Protocol.
 
-    - (
-    instancetype
-    )initWithURLRequest:(
-    NSURLRequest
-     *)request;
-    - (
-    instancetype
-    )initWithURLRequest:(
-    NSURLRequest
-     *)request protocols:(
-    NSArray
-    <
-    NSString
-     *
-    >
-     *)protocols;
-    - (
-    instancetype
-    )initWithURLRequest:(
-    NSURLRequest
-     *)request protocols:(
-    NSArray
-    <
-    NSString
-     *
-    >
-     *)protocols allowsUntrustedSSLCertificates:(
-    BOOL
-    )allowsUntrustedSSLCertificates;
+```objectivec
 
+// Protocols should be an array of strings that turn into Sec-WebSocket-Protocol.
+- (instancetype)initWithURLRequest:(NSURLRequest *)request;
+- (instancetype)initWithURLRequest:(NSURLRequest *)request protocols:(NSArray<NSString *> *)protocols;
+- (instancetype)initWithURLRequest:(NSURLRequest *)request protocols:(NSArray<NSString *> *)protocols allowsUntrustedSSLCertificates:(BOOL)allowsUntrustedSSLCertificates;
 
-    // Some helper constructors.
+// Some helper constructors.
+- (instancetype)initWithURL:(NSURL *)url;
+- (instancetype)initWithURL:(NSURL *)url protocols:(NSArray<NSString *> *)protocols;
+- (instancetype)initWithURL:(NSURL *)url protocols:(NSArray<NSString *> *)protocols allowsUntrustedSSLCertificates:(BOOL)allowsUntrustedSSLCertificates;
 
-    - (
-    instancetype
-    )initWithURL:(
-    NSURL
-     *)url;
-    - (
-    instancetype
-    )initWithURL:(
-    NSURL
-     *)url protocols:(
-    NSArray
-    <
-    NSString
-     *
-    >
-     *)protocols;
-    - (
-    instancetype
-    )initWithURL:(
-    NSURL
-     *)url protocols:(
-    NSArray
-    <
-    NSString
-     *
-    >
-     *)protocols allowsUntrustedSSLCertificates:(
-    BOOL
-    )allowsUntrustedSSLCertificates;
+// By default, it will schedule itself on +[NSRunLoop SR_networkRunLoop] using defaultModes.
+- (void)scheduleInRunLoop:(NSRunLoop *)aRunLoop forMode:(NSString *)mode;
+- (void)unscheduleFromRunLoop:(NSRunLoop *)aRunLoop forMode:(NSString *)mode;
+
+// SRWebSockets are intended for one-time-use only. Open should be called once and only once.
+- (void)open;
+- (void)close;
+- (void)closeWithCode:(NSInteger)code reason:(NSString *)reason;
+
+///--------------------------------------
+#pragma mark Send
+///--------------------------------------
+
+//下面是4个发送的方法
+/**
+Send a UTF-8 string or binary data to the server.
+
+@param message UTF-8 String or Data to send.
+
+@deprecated Please use `sendString:` or `sendData` instead.
+*/
+- (void)send:(id)message __attribute__((deprecated("Please use `sendString:` or `sendData` instead.")));
+- (void)sendString:(NSString *)string;
+- (void)sendData:(NSData *)data;
+- (void)sendPing:(NSData *)data;
+
+@end
+
+```
 
 
-    // By default, it will schedule itself on +[NSRunLoop SR_networkRunLoop] using defaultModes.
-
-    - (
-    void
-    )scheduleInRunLoop:(
-    NSRunLoop
-     *)aRunLoop forMode:(
-    NSString
-     *)mode;
-    - (
-    void
-    )unscheduleFromRunLoop:(
-    NSRunLoop
-     *)aRunLoop forMode:(
-    NSString
-     *)mode;
-
-
-    // SRWebSockets are intended for one-time-use only.  Open should be called once and only once.
-
-    - (
-    void
-    )open;
-    - (
-    void
-    )close;
-    - (
-    void
-    )closeWithCode:(
-    NSInteger
-    )code reason:(
-    NSString
-     *)reason;
-
-
-    ///--------------------------------------
-    #pragma mark Send
-    ///--------------------------------------
-    //下面是4个发送的方法
-    /**
-     Send a UTF-8 string or binary data to the server.
-
-     @param message UTF-8 String or Data to send.
-
-     @deprecated Please use `sendString:` or `sendData` instead.
-     */
-
-    - (
-    void
-    )send:(
-    id
-    )message __attribute__((deprecated(
-    "Please use `sendString:` or `sendData` instead."
-    )));
-    - (
-    void
-    )sendString:(
-    NSString
-     *)string;
-    - (
-    void
-    )sendData:(
-    NSData
-     *)data;
-    - (
-    void
-    )sendPing:(
-    NSData
-     *)data;
-
-
-    @end
 
 对应5种状态的代理方法
 
@@ -410,164 +228,68 @@ WebSocket开源框架有:[facebook/_Socket_Rocket](https://github.com/facebook/S
 ///--------------------------------------
 #pragma mark - SRWebSocketDelegate
 ///--------------------------------------
-@protocol
-SRWebSocketDelegate
-<
-NSObject
->
+@protocol SRWebSocketDelegate <NSObject>
 
-
-- (
-void
-)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(
-id
-)message;
-
+- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message;
 
 @optional
+- (void)webSocketDidOpen:(SRWebSocket *)webSocket;
+- (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error;
+- (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
+- (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload;
 
-- (
-void
-)webSocketDidOpen:(SRWebSocket *)webSocket;
-- (
-void
-)webSocket:(SRWebSocket *)webSocket didFailWithError:(
-NSError
- *)error;
-- (
-void
-)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(
-NSInteger
-)code reason:(
-NSString
- *)reason wasClean:(
-BOOL
-)wasClean;
-- (
-void
-)webSocket:(SRWebSocket *)webSocket didReceivePong:(
-NSData
- *)pongPayload;
-
-
-// Return YES to convert messages sent as Text to an NSString. Return NO to skip NSData -
->
- NSString conversion for Text messages. Defaults to YES.
-
-- (
-BOOL
-)webSocketShouldConvertTextFrameToString:(SRWebSocket *)webSocket;
-
+// Return YES to convert messages sent as Text to an NSString. Return NO to skip NSData -> NSString conversion for Text messages. Defaults to YES.
+- (BOOL)webSocketShouldConvertTextFrameToString:(SRWebSocket *)webSocket;
 @end
 ```
-
-didReceiveMessage方法是必须实现的，用来接收消息的。  
-下面4个did方法分别对应着Open，Fail，Close，ReceivePong不同状态的代理方法
 
 方法就上面这些了，我们实际来看看代码怎么写
 
 先是初始化Websocket连接，注意此处ws://或者wss://连接有且最多只能有一个，这个是Websocket协议规定的
 
 ```
-self
-.ws = [[SRWebSocket alloc] initWithURLRequest:[
-NSURLRequest
- requestWithURL:[
-NSURL
- URLWithString:[
-NSString
- stringWithFormat:
-@"%@://%@:%zd/ws"
-, serverProto, serverIP, serverPort]]]];
-    
-self
-.ws.delegate = delegate;
-    [
-self
-.ws open];
+    self.ws = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@:%zd/ws", serverProto, serverIP, serverPort]]]];
+    self.ws.delegate = delegate;
+    [self.ws open];
 ```
 
 发送消息
 
 ```
-    [self.ws send:message]
-;
+    [self.ws send:message];
+
 ```
 
 接收消息以及其他3个代理方法
 
 ```
 //这个就是接受消息的代理方法了，这里接受服务器返回的数据，方法里面就应该写处理数据，存储数据的方法了。
-
-- (
-void
-)
-webSocket:
-(SRWebSocket *)webSocket 
-didReceiveMessage:
-(id)message
+- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message
 {
-    NSDictionary *data = [NetworkUtils 
-decodeData:
-message];
-    
-if
- (!data)
-        
-return
-;
+    NSDictionary *data = [NetworkUtils decodeData:message];
+    if (!data)
+        return;
 }
 
-
 //这里是Websocket刚刚Open之后的代理方法。就想微信刚刚连接中，会显示连接中，当连接上了，就不显示连接中了，取消显示连接的方法就应该写在这里面
-
-- (
-void
-)
-webSocketDidOpen:
-(SRWebSocket *)webSocket
+- (void)webSocketDidOpen:(SRWebSocket *)webSocket
 {
-    
-// Open = silent ping
-
+    // Open = silent ping
     [self.ws receivedPing];
 }
 
-
 //这是关闭Websocket的代理方法
-
-- (
-void
-)
-webSocket:
-(SRWebSocket *)webSocket 
-didCloseWithCode:
-(NSInteger)code 
-reason:
-(NSString *)reason 
-wasClean:
-(BOOL)wasClean
+- (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean
 {
-    [self 
-failedConnection:
-NSLS(Disconnected)];
+    [self failedConnection:NSLS(Disconnected)];
 }
-
 
 //这里是连接Websocket失败的方法，这里面一般都会写重连的方法
-
-- (
-void
-)
-webSocket:
-(SRWebSocket *)webSocket 
-didFailWithError:
-(NSError *)error
+- (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error
 {
-    [self 
-failedConnection:
-NSLS(Disconnected)];
+    [self failedConnection:NSLS(Disconnected)];
 }
+
 ```
 
 #### 最后

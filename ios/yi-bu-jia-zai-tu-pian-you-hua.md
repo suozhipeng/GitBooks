@@ -47,7 +47,7 @@ imageView对象会关联一个下载列表（列表是给AnimationImages用的�
 
 同时，SDWebImage管理了一个全局下载队列（在DownloadManager中）,并发量设置为6.也就是说如果可见cell的数目是大于6的，就会有部分下载队列处于等待状态。而且，在添加下载任务到全局的下载队列中去的时候，SDWebImage默认是采取`LIFO`策略的，具体是在添加下载任务的时候，将上次添加的下载任务添加依赖为新添加的下载任务。
 
-```Objective-C
+```objectivec 
         [wself.downloadQueue addOperation:operation];
         if (wself.executionOrder == SDWebImageDownloaderLIFOExecutionOrder) {
             // Emulate LIFO execution order by systematically adding new operations as last operation's dependency
@@ -88,7 +88,8 @@ imageView对象和图片的url相关联，在滑动时，不取消旧的下载�
 
 下面的代码是`SDWebImage`的解决方案:
 
-``` Objective-C 
+```objectivec
+ 
 + (UIImage *)decodedImageWithImage:(UIImage *)image {
     if (image.images) {
         // Do not decode animated images
@@ -182,7 +183,7 @@ SDWebImage与AFNetworking都没有对第7点做优化，FastImageCache相对与�
 对于比较通用的缩放，或者圆角等功能，可以集成到控件本身。不过，提供一个接口出来，让使用者能够有机会对下载下来的图片做一些其他的特殊处理是有必要的。
 
 
-``` Objective-C 
+``` objectivec 
 
 /** SDWebImage
  * Allows to transform the image immediately after it has been downloaded and just before to cache it on disk and memory.

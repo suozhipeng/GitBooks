@@ -4,7 +4,8 @@
 版本适配宏 控件适配宏 只需要输入控件大小 自动计算不同屏幕下适配 可以自己输入需要的比例
 [原文链接](https://github.com/sujie0308/iOS--/tree/master)
 
-```Objective-C
+```objectivec
+
 //
 //  SJPublic.h
 //  yourmessage

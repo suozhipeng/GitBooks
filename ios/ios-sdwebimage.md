@@ -35,7 +35,7 @@ SDWebImage的使用非常简单，开发中需要的主要就是为一个UIImage
 
 [Objective-C](http://lib.csdn.net/base/objective-c):
 
-```
+```objectivec
 #import <SDWebImage/UIImageView+WebCache.h>
 // 使用SDWebImage框架为UIImageView加载在线图片
 [imageView sd_setImageWithURL:[NSURL URLWithString:@"http://www.***.com/***/image.jpg"]
@@ -44,7 +44,7 @@ SDWebImage的使用非常简单，开发中需要的主要就是为一个UIImage
 
 [Swift](http://lib.csdn.net/base/swift):
 
-```
+```swift
 imageView.sd_setImageWithURL(NSURL(string: "http://www.***.com/***/image.jpg"), placeholderImage:UIImage(imageNamed:"placeholder.png"))
 ```
 
