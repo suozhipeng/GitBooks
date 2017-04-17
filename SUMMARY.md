@@ -6,6 +6,7 @@
   * [React Native回调函数](rn/chapter1.md)
   * [RN 零碎点](rn/rn-ling-sui-dian.md)
 * [iOS原理解析](ios/yuan-ma-jie-xi.md)
+  *  [**iOS-目录技能**](ios/skill-list.md)
   * [iOS-WKWebView 那些坑](ios/ios-wkwebview.md)
   * [iOS RunTime](ios/ios-runtime.md)
   * [iOS-KVC、KVO实现原理](ios/ios-kvckvo.md)
