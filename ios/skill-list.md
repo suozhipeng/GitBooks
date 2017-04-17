@@ -27,14 +27,29 @@
    子类对象调用父类方法
 
    1. OC的动态性 
-   > **Runtime、发送消息**
+   > **Runtime：运行时，重要的消息机制、发送消息**
 
    4.1 动态类型、动态绑定和动态加载
+   > 必须到运行时(runtime)才会做一些事情。
+   **动态类型，就是id类型。**
+   **动态绑定(dynamic binding)需要用到@selector/SEL。**
+   **动态加载就是根据需求动态地加载资源，在运行时加载新类。**
 
    4.2 Method Swizzling
 
    1. RunLoop
-
+   > **让线程能随时处理事件但不退出的机制**
+   **线程和 RunLoop 之间是一一对应的**
+   _ runloop作用
+    1.使程序一直运行接受用户输入;
+   2.决定程序在何时应该处理哪些Event;
+   3.调用解耦;
+   4.节省CPU时间。_
+   >- 主线程的runloop默认是启动的。
+  > - Cocoa中的NSRunLoop类并不是线程安全的,
+  > - 获取对应的CFRunLoopRef类，来达到线程安全的目的。 
+  `- (CFRunLoopRef)getCFRunLoop;`
+  
    5.1 系统默认注册的5个Mode
 
    5.2 轮播图中的NSTimer问题
