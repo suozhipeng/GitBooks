@@ -161,7 +161,7 @@ if(![location isEqual:[NSNull null]]){
 9. GPU 编程的高度优化框架 Metal
 10. 总结，优化显示的多种手段
 
-第四章 iOS内存、缓存及存储优化
+## [第四章 iOS内存、缓存及存储优化](http://www.jianshu.com/p/a4684a5d2d7f)
 
 1. iOS内存优化
 
@@ -207,7 +207,7 @@ if(![location isEqual:[NSNull null]]){
 
 4. 网络请求优化
 
-第五章 iOS项目分析及优化
+## [第五章 iOS项目分析及优化](http://www.jianshu.com/p/834f5a824aee)
 
 1. 从代码看一个程序员的笔力
 2. 着手一个新项目条理
