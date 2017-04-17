@@ -22,7 +22,7 @@
 
 8. 请多使用 \#pragma mark - Mark Name 对方法进行分组 。如:
 
-   ```
+   ```objectivec
    #pragma mark - **********View lifeCycle******
    ```
 
@@ -60,7 +60,8 @@
 
 15. 当参数过长时，每个参数占用一行，以冒号对齐。如：
 
-    ```
+    ```objectivec
+
     - (void)aboutFisrtNumber:(NSString *)oneStr
               withNextNumber:(NSString *)twoStr
               withLastNumber:(NSString *)threeStr{
@@ -70,14 +71,16 @@
 
 16. 一行很长的代码应该分成两行代码，下一行用两个空格隔开
 
-    ```
+    ```objectivec
+
     self.productsRequest = [[JSProductsRequest alloc] 
       initWithProductIdentifiers:productIdentifiers];
     ```
 
 17. 删除多余的空行，所有方法与方法之间空1行，所有代码块之间空1行。变量声明后需要空1行，如果需要分类区别，各类别之间空1行。条件、循环，选择语句，整个语句结束，需要空1行。最后一个括弧之前不空行。注释与代码之间不空行。
 
-    ```
+    ```objectivec
+
      #pragma 与方法之间空1行
 
     ```
@@ -86,7 +89,8 @@
 
 19. 如果类声明中包含多个protocol，每个protocol占用一行，缩进2个字符如:
 
-    ```
+    ```objectivec
+
       @interface BootViewController : UITableViewController<</p>
       UITableViewDelegate,
       UITableViewDataSource,
