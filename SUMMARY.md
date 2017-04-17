@@ -19,6 +19,7 @@
   * [iOS适配](ios/iosshi-pei.md)
   * [iOS-视图生命周期](iosshi-tu-sheng-ming-zhou-qi.md)
   * [iOS-Websocket解析](ios/ios-websocketjie-xi.md)
+  * [iOS-socket相关](ios-socketxiang-guan.md)
   * [iOS 零碎点](ios/ios-ling-sui-dian.md)
   * [Swift 零碎点](ios/swift-ling-sui-dian.md)
   * [iOS-算法目录合集](ios/iossuan-fa-mu-lu-he-ji.md)
