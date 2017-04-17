@@ -20,8 +20,7 @@ iOS本地缓存数据方式有五种：
 
 # 方式一：直接写文件
 
-
-```objectivec 
+```
 
 //获取沙盒中缓存文件夹路径
 
@@ -50,15 +49,10 @@ NSString *cachePath = [arr lastObject];
 // NSString *cachePath = [arr objectAtIndex:0];
 
 /**
- 
  //获取沙盒中Document文件夹或者tmp文件夹路径都可使用上面两种方法
- 
  //tmp文件夹路径可直接这样获取
- 
  NSString *tmpPath = NSTemporaryDirectory();
- 
  NSLog(@"%@",tmpPath);
- 
  **/
 
 //拼接路径（目标路径），这个时候如果目录下不存在这个lotheve.plist文件，这个目录实际上是不存在的。
@@ -82,35 +76,24 @@ NSDictionary *content = @{@"字典数据测试1":@"1",@"字典数据测试2":@"2
 NSDictionary *dic = [NSDictionary dictionaryWithContentsOfFile:filePath];
 
 NSLog(@"%@",dic);
-
 ```
-
-
 
 沙盒中Library/Caches目录下多了lotheve.plist文件：
 
 ![](http://www.2cto.com/uploadfile/2016/0520/20160520025819779.jpg "\")
 
-  
-
-
 文件内容：
 
 ![](http://www.2cto.com/uploadfile/2016/0520/20160520025830998.jpg "\")
-
-  
-
-
-  
-
 
 如何获取模拟器沙盒路径：
 
 打印日志，复制路径打开mac finder，点击左上角菜单前往，前往文件夹，把路径粘贴上去。
 
-NSString \*path = \[NSSearchPathForDirectoriesInDomains\(NSDocumentDirectory,NSUserDomainMask,YES\) objectAtIndex:0\];
-
-NSLog\(@"%@",path\);
+```
+NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+NSLog(@"%@",path);
+```
 
 ## 方式二：NSUserDefaults（偏好设置）
 
@@ -122,56 +105,34 @@ NSLog\(@"%@",path\);
 
 代码示例：
 
+```
 //点击button保存数据
-
-- \(IBAction\)saveData:\(id\)sender {
-
+(IBAction)saveData:(id)sender {
 //获取NSUserDefaults对象
-
-NSUserDefaults \*userDefaults = \[NSUserDefaults standardUserDefaults\];
-
+NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 //存数据，不需要设置路劲，NSUserDefaults将数据保存在preferences目录下
-
-\[userDefaults setObject:@"Lotheve" forKey:@"name"\];
-
-\[userDefaults setObject:@"NSUserDefaults" forKey:@"demo"\];
-
+[userDefaults setObject:@"Lotheve" forKey:@"name"];
+[userDefaults setObject:@"NSUserDefaults" forKey:@"demo"];
 //立刻保存（同步）数据（如果不写这句话，会在将来某个时间点自动将数据保存在preferences目录下）
-
-\[userDefaults synchronize\];
-
-NSLog\(@"数据已保存"\);
-
+[userDefaults synchronize];
+NSLog(@"数据已保存");
 }
-
 //点击button读取数据
-
-- \(IBAction\)getData:\(id\)sender
-
+(IBAction)getData:(id)sender
 {
-
 //获取NSUserDefaults对象
-
-NSUserDefaults \*userDefaults = \[NSUserDefaults standardUserDefaults\];
-
+NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 //读取数据
-
-NSString \*name = \[userDefaults objectForKey:@"name"\];
-
-NSString \*demo = \[userDefaults objectForKey:@"demo"\];
-
+NSString *name = [userDefaults objectForKey:@"name"];
+NSString *demo = [userDefaults objectForKey:@"demo"];
 //打印数据
-
-NSLog\(@"name = %@ demo =%@",name,demo\);
-
+NSLog(@"name = %@ demo =%@",name,demo);
 }
+```
 
 点击“保存数据”后，查看沙盒中的Libarary/ Preferences目录：
 
 ![](http://www.2cto.com/uploadfile/2016/0520/20160520025846174.jpg "\")
-
-  
-
 
 数据以plist的格式写入磁盘中了。点开查看数据：
 
@@ -187,162 +148,90 @@ NSLog\(@"name = %@ demo =%@",name,demo\);
 
 代码示例：
 
+```
 先创建一个继承NSObject的类，该类遵守NSCoding协议
-
 TestPerson.h
-
 @interface TestPerson : NSObject
-
-@property \(nonatomic, copy\) NSString \*name;
-
-@property \(nonatomic, assign\) NSInteger age;
-
-@property \(nonatomic, copy\) NSString \*sex;
-
-@property \(nonatomic, strong\) NSArray \*familyMumbers;
-
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, assign) NSInteger age;
+@property (nonatomic, copy) NSString *sex;
+@property (nonatomic, strong) NSArray *familyMumbers;
 @end
-
 TestPerson.m
-
-\#import "TestPerson.h"
-
-@interface TestPerson \(\)
-
+#import "TestPerson.h"
+@interface TestPerson ()
 @end
-
 @implementationTestPerson
-
-- \(void\)viewDidLoad
-
+(void)viewDidLoad
 {
-
-\[super viewDidLoad\];
-
+    [super viewDidLoad];
 }
-
-\#pragma mark - NSCoding协议方法 \(一定要实现\)
-
+#pragma mark - NSCoding协议方法 (一定要实现)
 //当进行归档操作的时候就会调用该方法
-
 //在该方法中要写清楚要存储对象的哪些属性
-
-- \(void\)encodeWithCoder:\(NSCoder \*\)aCoder
-
+(void)encodeWithCoder:(NSCoder *)aCoder
 {
-
-NSLog\(@"调用了encodeWithCoder方法"\);
-
-\[aCoder encodeObject:\_name forKey:@"name"\];
-
-\[aCoder encodeInteger:\_age forKey:@"age"\];
-
-\[aCoder encodeObject:\_sex forKey:@"sex"\];
-
-\[aCoder encodeObject:\_familyMumbers forKey:@"familyMumbers"\];
-
+    NSLog(@"调用了encodeWithCoder方法");
+    [aCoder encodeObject:_name forKey:@"name"];
+    [aCoder encodeInteger:_age forKey:@"age"];
+    [aCoder encodeObject:_sex forKey:@"sex"];
+    [aCoder encodeObject:_familyMumbers forKey:@"familyMumbers"];
 }
-
 //当进行解档操作的时候就会调用该方法
-
 //在该方法中要写清楚要提取对象的哪些属性
-
-- \(id\)initWithCoder:\(NSCoder \*\)aDecoder
-
+(id)initWithCoder:(NSCoder *)aDecoder
 {
-
-NSLog\(@"调用了initWithCoder方法"\);
-
-if \(self = \[super init\]\) {
-
-self.name = \[aDecoder decodeObjectForKey:@"name"\];
-
-self.age = \[aDecoder decodeIntegerForKey:@"age"\];
-
-self.sex = \[aDecoder decodeObjectForKey:@"sex"\];
-
-\_familyMumbers = \[aDecoder decodeObjectForKey:@"familyMumbers"\];
-
+    NSLog(@"调用了initWithCoder方法");
+    if (self = [super init]) {
+        self.name = [aDecoder decodeObjectForKey:@"name"];
+        self.age = [aDecoder decodeIntegerForKey:@"age"];
+        self.sex = [aDecoder decodeObjectForKey:@"sex"];
+        _familyMumbers = [aDecoder decodeObjectForKey:@"familyMumbers"];
+    }
+    return self;
 }
-
-return self;
-
-}
-
 @end
+```
 
 这里还要讲一下一个小技巧：使用static修饰来替代宏定义。上面的序列化中，我们可以看到NSCoding的协议方法中对数据进行序列化并且使用一个key来保存它。正常情况下我们可以使用宏来定义key，但是过多的宏定义在编译时也会造成大量的损耗。这时候可以使用static定义静态变量来取代宏定义。
 
-static NSString \* const kUserNameKey = @"userName";
-
+```
+static NSString * const kUserNameKey = @"userName";
 让自定义的数据遵循NSCoding协议后，我们就能使用NSKeyedArchiver和NSKeyedUnarchiver来对持久化的数据进行存取操作了:
-
-- \(IBAction\)saveData:\(id\)sender
-
+-(IBAction)saveData:(id)sender
 {
-
-//创建一个自定义类的实例
-
-\_p = \[\[TestPerson alloc\]init\];
-
-\_p.name = @"Lotheve";
-
-\_p.age = 20;
-
-\_p.sex = @"m";
-
-\_p.familyMumbers = @\[@"Father",@"Mather",@"Me"\];
-
-//获取文件路径
-
-NSString \*docPath = \[NSSearchPathForDirectoriesInDomains\(NSDocumentDirectory, NSUserDomainMask, YES\) lastObject\];
-
-//文件类型可以随便取，不一定要正确的格式
-
-NSString \*targetPath = \[docPath stringByAppendingPathComponent:@"lotheve.plist"\];
-
-//将自定义对象保存在指定路径下
-
-\[NSKeyedArchiver archiveRootObject:\_p toFile:targetPath\];
-
-NSLog\(@"文件已储存"\);
-
+    //创建一个自定义类的实例
+    _p = [[TestPerson alloc]init];
+    _p.name = @"Lotheve";
+    _p.age = 20;
+    _p.sex = @"m";
+    _p.familyMumbers = @[@"Father",@"Mather",@"Me"];
+    //获取文件路径
+    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    //文件类型可以随便取，不一定要正确的格式
+    NSString *targetPath = [docPath stringByAppendingPathComponent:@"lotheve.plist"];
+    //将自定义对象保存在指定路径下
+    [NSKeyedArchiver archiveRootObject:_p toFile:targetPath];
+    NSLog(@"文件已储存");
 }
-
-- \(IBAction\)getData:\(id\)sender
-
+-(IBAction)getData:(id)sender
 {
-
-//获取文件路径
-
-NSString \*docPath = \[NSSearchPathForDirectoriesInDomains\(NSDocumentDirectory, NSUserDomainMask, YES\) lastObject\];
-
-NSString \*targetPath = \[docPath stringByAppendingPathComponent:@"lotheve.plist"\];
-
-TestPerson \*person = \[NSKeyedUnarchiver unarchiveObjectWithFile:targetPath\];
-
-NSLog\(@"name = %@ , age =%ld , sex = %@ , familyMubers = %@",person.name,person.age,person.sex,person.familyMumbers\);
-
-NSLog\(@"文件已提取"\);
-
+    //获取文件路径
+    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *targetPath = [docPath stringByAppendingPathComponent:@"lotheve.plist"];
+    TestPerson *person = [NSKeyedUnarchiver unarchiveObjectWithFile:targetPath];
+    NSLog(@"name = %@ , age =%ld , sex = %@ , familyMubers = %@",person.name,person.age,person.sex,person.familyMumbers);
+    NSLog(@"文件已提取");
 }
+```
 
 点击“保存数据”后，查看沙盒中Documents目录：
 
 ![](http://www.2cto.com/uploadfile/2016/0520/20160520025909919.jpg "\")
 
-  
-
-
-  
-
-
 点击查看文件内容：
 
 ![](http://www.2cto.com/uploadfile/2016/0520/20160520025921563.jpg "\")
-
-  
-
 
 点击“提取数据”后打印结果：
 
@@ -354,86 +243,50 @@ coreData是iOS5之后苹果推出的数据持久化框架，其提供了ORM的�
 
 ![](http://www.2cto.com/uploadfile/2016/0520/20160520030002982.jpg "\")
 
-  
-
-
 由于我们不需要关心数据的存储，coreData使用起来算是最简单的持久化方案。要使用coreData有两个方式，一个是在创建项目的时候勾选use core data，另一个则是手动创建。在这里我们要讲解的是前者创建的方式：
 
 1、创建新项目勾选使用coreData
 
 ![](http://www.2cto.com/uploadfile/2016/0520/20160520030014906.jpg "\")
 
-  
-
-
 2、创建关系模型，在这里我创建的模型名字是LXDCoreDataDemo（注意名字一定要和项目名称保持一致）
 
 ![](http://www.2cto.com/uploadfile/2016/0520/20160520030024531.jpg "\")
-
-  
-
 
 3、在创建的关系模型中添加实体，命名为Person，并且添加三个字段：name、age、score
 
 ![](http://www.2cto.com/uploadfile/2016/0520/20160520030034315.jpg "\")
 
-  
-
-
 到了这里我们的实体模型就创建好了，接下来就是通过NSManagedObject来将实体模型转换成对象。通过从coreData取出的对象，全部都是继承自NSManagedObject的子类。那么我们需要根据当前的关系模型来创建Person类
 
 ![](http://www.2cto.com/uploadfile/2016/0520/20160520030043993.jpg "\")
-
-  
-
 
 选择LXDCoreDataDemo -&gt; Next -&gt; Person -&gt; Create，我们就创建好了Person，这时候三个成员属性都会自动添加完成
 
 ![](http://www.2cto.com/uploadfile/2016/0520/20160520030052360.jpg "\")
 
-  
-
-
 在执行操作的类实现文件中，我们要加入AppDelegate和Person的头文件，因为在创建项目的时候如果我们勾选了use core data的选项，appDelegate文件中会帮我们生成用于管理、存储这些模型的对象，我们可以通过添加头文件来使用。插入数据的代码如下：
 
-  
-
-
+```
 //先取出coredata上下文管理者
-
-AppDelegate \*appDelegate = \[\[UIApplication sharedApplication\] delegate\];
-
-NSManagedObjectContext \*context = appDelegate.managedObjectContext;
-
+AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+NSManagedObjectContext *context = appDelegate.managedObjectContext;
 //保存新数据
-
-Person \*person = \[NSEntityDescription insertNewObjectForEntityForName: @"Person" inManagedObjectContext: context\];
-
+Person *person = [NSEntityDescription insertNewObjectForEntityForName: @"Person" inManagedObjectContext: context];
 person.name = @"czk"
-
-person.score = \[NSNumber numberWithInt:100\]；
-
-person.age = \[NSNumber numberWithInt:25\];
-
-\[appDelegate saveContext\];
-
+person.score = [NSNumber numberWithInt:100]；
+person.age = [NSNumber numberWithInt:25];
+[appDelegate saveContext];
 //查询所有数据
-
-NSError \*error;
-
-NSFetchRequest \*request = \[NSFetchRequest new\];
-
-NSEntityDescription \*entity = \[NSEntityDescription entityForName: @"Person" inManagedObjectContext: context\];
-
-\[request setEntity: entity\];
-
-NSArray \*results = \[\[context executeFetchRequest: request error: &error\] copy\];
-
-for \(Person \*p in results\) {
-
-NSLog\(@"%@, %@, %@", p.name, p.age, p.score\);
-
+NSError *error;
+NSFetchRequest *request = [NSFetchRequest new];
+NSEntityDescription *entity = [NSEntityDescription entityForName: @"Person" inManagedObjectContext: context];
+[request setEntity: entity];
+NSArray *results = [[context executeFetchRequest: request error: &error] copy];
+for (Person *p in results) {
+    NSLog(@"%@, %@, %@", p.name, p.age, p.score);
 }
+```
 
 _**注意：如果出现崩溃异常，请卸载App后重新安装。**_
 
@@ -495,239 +348,182 @@ db=\[FMDatabasedatabaseWithPath:database\_path\];
 
 ![](http://www.2cto.com/uploadfile/2016/0520/20160520030143441.jpg "\")
 
-  
-
-
-  
-
-
 看一下例子：
 
 [创建表：](http://www.jianshu.com/p/72c12b0e55f3)
 
-if\(\[dbopen\]\){
-
-NSString\*sqlCreateTable=\[NSStringstringWithFormat:@"CREATETABLEIFNOTEXISTS'%@'\('%@'INTEGERPRIMARYKEYAUTOINCREMENT,'%@'TEXT,'%@'INTEGER,'%@'TEXT\)",TABLENAME,ID,NAME,AGE,ADDRESS\];
-
-BOOLres=\[dbexecuteUpdate:sqlCreateTable\];
-
-if\(!res\){
-
-NSLog\(@"errorwhencreatingdbtable"\);
-
-}else{
-
-NSLog\(@"successtocreatingdbtable"\);
-
+```
+if([dbopen]){
+    NSString*sqlCreateTable=[NSStringstringWithFormat:@"CREATETABLEIFNOTEXISTS'%@'('%@'INTEGERPRIMARYKEYAUTOINCREMENT,'%@'TEXT,'%@'INTEGER,'%@'TEXT)",TABLENAME,ID,NAME,AGE,ADDRESS];
+    BOOLres=[dbexecuteUpdate:sqlCreateTable];
+    if(!res){
+        NSLog(@"errorwhencreatingdbtable");
+    }else{
+        NSLog(@"successtocreatingdbtable");
+    }
+    [dbclose];
 }
 
-\[dbclose\];
-
-}
+```
 
 添加数据：
 
-if\(\[dbopen\]\){
-
-NSString\*insertSql1=\[NSStringstringWithFormat:
-
-@"INSERTINTO'%@'\('%@','%@','%@'\)VALUES\('%@','%@','%@'\)",
-
-TABLENAME,NAME,AGE,ADDRESS,@"张三",@"13",@"济南"\];
-
-BOOLres=\[dbexecuteUpdate:insertSql1\];
-
-NSString\*insertSql2=\[NSStringstringWithFormat:
-
-@"INSERTINTO'%@'\('%@','%@','%@'\)VALUES\('%@','%@','%@'\)",
-
-TABLENAME,NAME,AGE,ADDRESS,@"李四",@"12",@"济南"\];
-
-BOOLres2=\[dbexecuteUpdate:insertSql2\];
-
-if\(!res\){
-
-NSLog\(@"errorwheninsertdbtable"\);
-
-}else{
-
-NSLog\(@"successtoinsertdbtable"\);
-
+```
+if([dbopen]){
+    NSString*insertSql1=[NSStringstringWithFormat:
+                         @"INSERTINTO'%@'('%@','%@','%@')VALUES('%@','%@','%@')",
+                         TABLENAME,NAME,AGE,ADDRESS,@"张三",@"13",@"济南"];
+    BOOLres=[dbexecuteUpdate:insertSql1];
+    NSString*insertSql2=[NSStringstringWithFormat:
+                         @"INSERTINTO'%@'('%@','%@','%@')VALUES('%@','%@','%@')",
+                         TABLENAME,NAME,AGE,ADDRESS,@"李四",@"12",@"济南"];
+    BOOLres2=[dbexecuteUpdate:insertSql2];
+    if(!res){
+        NSLog(@"errorwheninsertdbtable");
+    }else{
+        NSLog(@"successtoinsertdbtable");
+    }
+    [dbclose];
 }
-
-\[dbclose\];
-
-}
+```
 
 修改数据：
 
-if\(\[dbopen\]\){
-
-NSString\*updateSql=\[NSStringstringWithFormat:
-
-@"UPDATE'%@'SET'%@'='%@'WHERE'%@'='%@'",
-
-TABLENAME,AGE,@"15",AGE,@"13"\];
-
-BOOLres=\[dbexecuteUpdate:updateSql\];
-
-if\(!res\){
-
-NSLog\(@"errorwhenupdatedbtable"\);
-
-}else{
-
-NSLog\(@"successtoupdatedbtable"\);
-
+```
+if([dbopen]){
+    NSString*updateSql=[NSStringstringWithFormat:
+                        @"UPDATE'%@'SET'%@'='%@'WHERE'%@'='%@'",
+                        TABLENAME,AGE,@"15",AGE,@"13"];
+    BOOLres=[dbexecuteUpdate:updateSql];
+    if(!res){
+        NSLog(@"errorwhenupdatedbtable");
+    }else{
+        NSLog(@"successtoupdatedbtable");
+    }
+    [dbclose];
 }
-
-\[dbclose\];
-
-}
+```
 
 删除数据：
 
-if\(\[dbopen\]\){
-
-NSString\*deleteSql=\[NSStringstringWithFormat:
-
-@"deletefrom%@where%@='%@'",
-
-TABLENAME,NAME,@"张三"\];
-
-BOOLres=\[dbexecuteUpdate:deleteSql\];
-
-if\(!res\){
-
-NSLog\(@"errorwhendeletedbtable"\);
-
-}else{
-
-NSLog\(@"successtodeletedbtable"\);
-
+```
+if([dbopen]){
+    NSString*deleteSql=[NSStringstringWithFormat:
+                        @"deletefrom%@where%@='%@'",
+                        TABLENAME,NAME,@"张三"];
+    BOOLres=[dbexecuteUpdate:deleteSql];
+    if(!res){
+        NSLog(@"errorwhendeletedbtable");
+    }else{
+        NSLog(@"successtodeletedbtable");
+    }
+    [dbclose];
 }
 
-\[dbclose\];
-
-}
+```
 
 数据库查询操作：
 
-查询操作使用了executeQuery，并涉及到FMResultSet。
-
-if\(\[dbopen\]\){
-
-NSString\*sql=\[NSStringstringWithFormat:
-
-@"SELECT\*FROM%@",TABLENAME\];
-
-FMResultSet\*rs=\[dbexecuteQuery:sql\];
-
-while\(\[rsnext\]\){
-
-intId=\[rsintForColumn:ID\];
-
-NSString\*name=\[rsstringForColumn:NAME\];
-
-NSString\*age=\[rsstringForColumn:AGE\];
-
-NSString\*address=\[rsstringForColumn:ADDRESS\];
-
-NSLog\(@"id=%d,name=%@,age=%@address=%@",Id,name,age,address\);
-
+```
+//查询操作使用了executeQuery，并涉及到FMResultSet。
+if([dbopen]){
+    NSString*sql=[NSStringstringWithFormat:
+                  @"SELECT*FROM%@",TABLENAME];
+    FMResultSet*rs=[dbexecuteQuery:sql];
+    while([rsnext]){
+        intId=[rsintForColumn:ID];
+        NSString*name=[rsstringForColumn:NAME];
+        NSString*age=[rsstringForColumn:AGE];
+        NSString*address=[rsstringForColumn:ADDRESS];
+        NSLog(@"id=%d,name=%@,age=%@address=%@",Id,name,age,address);
+    }
+    [dbclose];
 }
-
-\[dbclose\];
-
-}
+```
 
 FMDB的FMResultSet提供了多个方法来获取不同类型的数据：
 
 ![](http://www.2cto.com/uploadfile/2016/0520/20160520030157721.jpg "\")
 
-  
-
-
 数据库多线程操作：
-
-  
-
 
 如果应用中使用了多线程操作数据库，那么就需要使用FMDatabaseQueue来保证线程安全了。 应用中不可在多个线程中共同使用一个FMDatabase对象操作数据库，这样会引起数据库数据混乱。 为了多线程操作数据库安全，FMDB使用了FMDatabaseQueue，使用FMDatabaseQueue很简单，首先用一个数据库文件地址来初使化FMDatabaseQueue，然后就可以将一个闭包\(block\)传入inDatabase方法中。 在闭包中操作数据库，而不直接参与FMDatabase的管理。
 
-FMDatabaseQueue \* queue = \[FMDatabaseQueue databaseQueueWithPath:database\_path\];
+```
+FMDatabaseQueue * queue = [FMDatabaseQueue databaseQueueWithPath:database_path];
 
-dispatch\_queue\_tq1=dispatch\_queue\_create\("queue1",NULL\);
+dispatch_queue_tq1=dispatch_queue_create("queue1",NULL);
 
-dispatch\_queue\_tq2=dispatch\_queue\_create\("queue2",NULL\);
+dispatch_queue_tq2=dispatch_queue_create("queue2",NULL);
 
-dispatch\_async\(q1,^{
+dispatch_async(q1,^{
+    
+    for(inti=0;i<50;++i){
+        
+        [queueinDatabase:^(FMDatabase*db2){
+            
+            NSString*insertSql1=[NSStringstringWithFormat:
+                                 
+                                 @"INSERTINTO'%@'('%@','%@','%@')VALUES(?,?,?)",
+                                 
+                                 TABLENAME,NAME,AGE,ADDRESS];
+            
+            NSString*name=[NSStringstringWithFormat:@"jack%d",i];
+            
+            NSString*age=[NSStringstringWithFormat:@"%d",10+i];
+            
+            BOOLres=[db2executeUpdate:insertSql1,name,age,@"济南"];
+            
+            if(!res){
+                
+                NSLog(@"errortoinsterdata:%@",name);
+                
+            }else{
+                
+                NSLog(@"succtoinsterdata:%@",name);
+                
+            }
+            
+        }];
+        
+    }
+    
+});
 
-for\(inti=0;i&lt;50;++i\){
-
-\[queueinDatabase:^\(FMDatabase\*db2\){
-
-NSString\*insertSql1=\[NSStringstringWithFormat:
-
-@"INSERTINTO'%@'\('%@','%@','%@'\)VALUES\(?,?,?\)",
-
-TABLENAME,NAME,AGE,ADDRESS\];
-
-NSString\*name=\[NSStringstringWithFormat:@"jack%d",i\];
-
-NSString\*age=\[NSStringstringWithFormat:@"%d",10+i\];
-
-BOOLres=\[db2executeUpdate:insertSql1,name,age,@"济南"\];
-
-if\(!res\){
-
-NSLog\(@"errortoinsterdata:%@",name\);
-
-}else{
-
-NSLog\(@"succtoinsterdata:%@",name\);
-
-}
-
-}\];
-
-}
-
-}\);
-
-dispatch\_async\(q2,^{
-
-for\(inti=0;i&lt;50;++i\){
-
-\[queueinDatabase:^\(FMDatabase\*db2\){
-
-NSString\*insertSql2=\[NSStringstringWithFormat:
-
-@"INSERTINTO'%@'\('%@','%@','%@'\)VALUES\(?,?,?\)",
-
-TABLENAME,NAME,AGE,ADDRESS\];
-
-NSString\*name=\[NSStringstringWithFormat:@"lilei%d",i\];
-
-NSString\*age=\[NSStringstringWithFormat:@"%d",10+i\];
-
-BOOLres=\[db2executeUpdate:insertSql2,name,age,@"北京"\];
-
-if\(!res\){
-
-NSLog\(@"errortoinsterdata:%@",name\);
-
-}else{
-
-NSLog\(@"succtoinsterdata:%@",name\);
-
-}
-
-}\];
-
-}
-
-}\);
+dispatch_async(q2,^{
+    
+    for(inti=0;i<50;++i){
+        
+        [queueinDatabase:^(FMDatabase*db2){
+            
+            NSString*insertSql2=[NSStringstringWithFormat:
+                                 
+                                 @"INSERTINTO'%@'('%@','%@','%@')VALUES(?,?,?)",
+                                 
+                                 TABLENAME,NAME,AGE,ADDRESS];
+            
+            NSString*name=[NSStringstringWithFormat:@"lilei%d",i];
+            
+            NSString*age=[NSStringstringWithFormat:@"%d",10+i];
+            
+            BOOLres=[db2executeUpdate:insertSql2,name,age,@"北京"];
+            
+            if(!res){
+                
+                NSLog(@"errortoinsterdata:%@",name);
+                
+            }else{
+                
+                NSLog(@"succtoinsterdata:%@",name);
+                
+            }
+            
+        }];
+        
+    }
+    
+});
+```
 
 **总结：**
 
