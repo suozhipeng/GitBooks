@@ -38,7 +38,7 @@
   * [Interview-iOS-06](interview/interview-ios-06.md)
   * [Interview-iOS-07](interview/interview-ios-07.md)
   * [Interview-iOS-08](interview/interview-ios-08.md)
-  * [Interview-iOS-09](interview-ios-09.md)
+  * [Interview-iOS-09](ios/interview-ios-09.md)
   * [Interview-iOS-谈谈面试](interview-iostan-tan-mian-shi.md)
   * [Interview-iOS-前篇](interview-iosqian-pian.md)
   * [Interview-iOS-中篇](interview-ioszhong-pian.md)
