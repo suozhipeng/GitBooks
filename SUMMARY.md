@@ -38,6 +38,7 @@
   * [Interview-iOS-08](interview/interview-ios-08.md)
   * [Interview-iOS-09](interview-ios-09.md)
   * [Interview-iOS-前篇](interview-iosqian-pian.md)
+  * [Interview-iOS-中篇](interview-ioszhong-pian.md)
 * [其他](other/qi-ta.md)
   * [项目命名](other/xiang-mu-ming-ming.md)
   * [设计模式MVC、MVP](other/she-ji-mo-shi-mvc-mvp.md)
