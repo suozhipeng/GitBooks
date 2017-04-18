@@ -5,7 +5,7 @@
 
 ##  很全面的算法和数据结构知识（含代码实现）
 【2017/04/17】
-链接：http://blog.jobbole.com/110835/
+链接：https://github.com/kdn251/interviews/blob/master/README-zh-cn.md
 
 ### 1.在 N 个数中，找到前 k 个数** 或者 **100亿个数字找出最大的10个
 > 链接1：https://www.zhihu.com/question/28874340/answer/43276792
