@@ -27,7 +27,6 @@
   * [iOS-Copy\(深拷贝，浅拷贝,使用\)](ios/ios-copy-deep.md)
   * [iOS-算法目录合集](ios/iossuan-fa-mu-lu-he-ji.md)
   * [iOS-Data缓存](ios/iosdatacache.md)
-  * [算法](ios/suan-fa.md)
 * [Interview](interview/interview.md)
   * [Interface-面试Leader](interview/interfacexiang-guan.md)
   * [Interface-关于培训学习的建议](interview/interfaceguan-yu-pei-xun.md)
