@@ -4,12 +4,12 @@
 ## 常用排序算法总结(二)
 >http://www.cnblogs.com/eniac12/p/5332117.html
 
-## iOS算法目录合集
-
-> http://www.jianshu.com/p/4f8e4071f85b
-
 ## 很全面的算法和数据结构知识（含代码实现）
 > https://github.com/kdn251/interviews/blob/master/README-zh-cn.md
+
+## iOS算法目录合集
+> http://www.jianshu.com/p/4f8e4071f85b
+
 
 ### 1.在 N 个数中，找到前 k 个数** 或者 **100亿个数字找出最大的10个
 
