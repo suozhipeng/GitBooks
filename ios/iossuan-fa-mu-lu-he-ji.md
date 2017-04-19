@@ -4,7 +4,7 @@
 ## 常用排序算法总结(二)
 >http://www.cnblogs.com/eniac12/p/5332117.html
 
-## 很全面的算法和数据结构知识（含代码实现）
+## 算法和数据结构知识（含代码实现）
 > https://github.com/kdn251/interviews/blob/master/README-zh-cn.md
 
 ## iOS算法目录合集

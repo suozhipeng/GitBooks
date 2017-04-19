@@ -5,6 +5,8 @@ _推荐博客：_
 
 ---
 
+
+
 # iOS沉思录
 [2016-2017]
 [系列链接](http://blog.csdn.net/cordova/article/category/6128968/1)
@@ -16,7 +18,10 @@ _推荐博客：_
 [原文链接](http://www.jianshu.com/p/485b8d75ccd4#)
 
 ---
+## OAuth2.0 第三方授权原理
+http://www.jianshu.com/p/de5b7aa57c39
 
+---
 ## AFNetworking3.1.0源码解读
 [2016.07]
 [原文链接](http://www.jianshu.com/p/c36159094e24)
