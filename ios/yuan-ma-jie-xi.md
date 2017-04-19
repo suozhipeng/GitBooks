@@ -20,6 +20,10 @@ _推荐博客：_
 ---
 ## OAuth2.0 第三方授权原理
 http://www.jianshu.com/p/de5b7aa57c39
+**授权原理**
+![](/assets/OAuth原理.jpg)
+**OAuth2.0授权流程**
+![![](/assets/OAuth2.0流程.jpg)](/assets/Oauth2.0授权码模式示意图.jpg)
 
 ---
 ## AFNetworking3.1.0源码解读
