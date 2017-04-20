@@ -192,3 +192,65 @@ for(int index = 0; index < 20; index++) {
     NSLog(tempNumber);
 }
 ```
+
+
+### 问题： 在block内如何修改block外部变量？
+
+在block内部修改block外部变量会编译不通过，提示变量缺少__block修饰，不可赋值。要想在block内部修改block外部变量，则必须在外部定义变量时，前面加上__block修饰符：
+```objectivec
+/* block外部变量 */
+__block int var1 = 0;
+int var2 = 0;
+/* 定义block */
+void (^block)(void) = ^{
+    /* 试图修改block外部变量 */
+    var1 = 100;
+    /* 编译错误，在block内部不可对var2赋值 */
+    // var2 = 1;
+};
+/* 执行block */
+block();
+NSLog(@"修改后的var1:%d",var1); // 修改后的var1:100
+```
+### 问题： 使用block时什么情况会发生引用循环，如何解决？
+
+常见的使用block引起引用循环的情况为：在一个对象中强引用了一个block，在该block中又强引用了该对象，此时就出现了该对象和该block的循环引用，例如：
+```objectivec
+/* Test.h */
+#import <Foundation/Foundation.h>
+/* 声明一个名为MYBlock的block，参数为空，返回值为void */
+typedef void (^MYBlock)();
+
+@interface Test : NSObject
+/* 定义并强引用一个MYBlock */
+@property (nonatomic, strong) MYBlock block;
+/* 对象属性 */
+@property (nonatomic, copy) NSString *name;
+
+- (void)print;
+
+@end
+
+/* Test.m */
+#import "Test.h"
+@implementation Test
+
+- (void)print {
+    self.block = ^{
+        NSLog(@"%@",self.name);
+    };
+    self.block();
+}
+
+@end
+```
+解决上面的引用循环的方法一个是强制将一方置nil，破坏引用循环，另外一种方法是将对象使用__weak或者__block修饰符修饰之后再在block中使用(注意是在ARC下)：
+```objectivec
+- (void)print {
+    __weak typeof(self) weakSelf = self;
+    self.block = ^{
+        NSLog(@"%@",weakSelf.name);
+    };
+    self.block();
+}
+```
