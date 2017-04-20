@@ -1,7 +1,11 @@
 # **iOS异步图片加载优化与常用开源库分析**
-[原文链接](http://www.jianshu.com/p/3b2c95e1404f)
+原文链接:http://www.jianshu.com/p/3b2c95e1404f
+SDWebImage分析
+> 链接1：http://blog.csdn.net/cordova/article/details/54708029
+链接2：http://www.jianshu.com/p/f14b17467dd9#
 
 ---
+
 # 1. 网络图片显示大体步骤:
 
 1. 下载图片
@@ -19,6 +23,9 @@
    渲染解压缩过的位图
 
 > 以上4，5，6，7，8步是在`UIImageView`的`setImage`时进行的，所以默认在主线程进行\(iOS UI操作必须在主线程执行\)。
+
+**SDWebImage加载流程**
+![SDWebImage加载流程](/assets/sdWebImage原理.png)
 
 # 2. 一些优化思路：
 
@@ -234,9 +241,5 @@ SDWebImage与AFNetworking都没有对第7点做优化，FastImageCache相对与�
 转载请注明出处哦，我的博客:[luoyibu](http://www.luoyibu.com/)
 
 ---
-
----
-## SDWebImage图片二级缓存异步加载基本原理
-
 
 
