@@ -50,6 +50,7 @@
   * [项目命名](other/xiang-mu-ming-ming.md)
   * [代码规范](other/dai-ma-gui-fan.md)
   * [设计模式MVC、MVP](other/she-ji-mo-shi-mvc-mvp.md)
+  * [做开发十年，我总结出了这些开发经验](other/experience-over-10.md)
   * [搬瓦工](other/ban-wa-gong.md)
   * [nginx、swoole高并发原理](other/nginxswoolegao-bing-fa-yuan-li.md)
   * [OSI七层模型和TCP/IP四层模型](other/osiqi-ceng-mo-xing-wang-luo-he-tcp-ip.md)
