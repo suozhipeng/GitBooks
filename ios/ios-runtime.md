@@ -5,6 +5,8 @@ _书籍推荐📚：_[Effective Objective-C 2.0](https://book.douban.com/subject
 [http://blog.csdn.net/cordova/article/details/53876682](http://blog.csdn.net/cordova/article/details/53876682)
 
 ---
+* [1.动态类型](#1)
+ 
 
 > OC语言的动态性主要体现在三个方面：
 >
@@ -13,7 +15,7 @@ _书籍推荐📚：_[Effective Objective-C 2.0](https://book.douban.com/subject
 > * [动态绑定\(Dynamic binding\)](#动态绑定)
 > * 动态加载\(Dynamic loading\)
 
-* <a name="动态类型"></a>动态类型识别方法\(面向对象语言的内省Introspection特性\)
+* 动态类型识别方法\(面向对象语言的内省Introspection特性\)
 
 1.首先是Class类型：
 > 
@@ -73,7 +75,7 @@ SEL funcID = @select(func)；// 这个注册事件回调时常用，将方法转
 SEL funcID = NSSelectorFromString(@"func"); // 根据方法名得到方法标识
 NSString *funcName = NSStringFromSelector(funcID); // 根据SEL类型得到方法名字符串
 ```
-**<a name="动态绑定"></a>动态绑定**
+** <a name="动态绑定"></a> 动态绑定**
 > 
 动态绑定指的是**方法确定的动态性**，具体指的是利用OC的消息传递机制将要执行的方法的确定推迟到运行时，可以动态添加方法。
 >
@@ -88,7 +90,7 @@ NSString *funcName = NSStringFromSelector(funcID); // 根据SEL类型得到方�
 
 ---
 
-## Objective-C语言消息传递机制三道防线：消息转发机制详解
+## <id="1">Objective-C语言消息传递机制三道防线：消息转发机制详解
 
 原文链接：[http://blog.csdn.net/cordova/article/details/70181837](http://blog.csdn.net/cordova/article/details/70181837)
 
