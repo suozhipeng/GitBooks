@@ -1,7 +1,7 @@
 知乎链接：[http://www.zhihu.com/question/19604641](http://www.zhihu.com/question/19604641)
 
 ### 1.什么是arc？（arc是为了解决什么问题诞生的？） {#1什么是arcarc是为了解决什么问题诞生的}
-
+> 
 首先解释ARC: automatic reference counting自动引用计数。  
 ARC几个要点：  
 在对象被创建时 retain count +1，在对象被release时 retain count -1.当retain count 为0 时，销毁对象。  
@@ -14,7 +14,7 @@ MRC下内存管理的缺点：
 4.多线程操作时，不确定哪个线程最后使用完毕
 
 ### 2.请解释以下keywords的区别： assign vs weak, \_\_block vs \_\_weak {#2请解释以下keywords的区别-assign-vs-weak-block-vs-weak}
-
+> 
 assign适用于基本数据类型，weak是适用于NSObject对象，并且是一个弱引用。  
 assign其实也可以用来修饰对象，那么我们为什么不用它呢？因为被assign修饰的对象在释放之后，指针的地址还是存在的，也就是说指针并没有被置为nil。如果在后续的内存分配中，刚好分到了这块地址，程序就会崩溃掉。  
 而weak修饰的对象在释放之后，指针地址会被置为nil。所以现在一般弱引用就是用weak。  
@@ -24,7 +24,7 @@ assign其实也可以用来修饰对象，那么我们为什么不用它呢？�
 同时，在ARC下，要避免block出现循环引用 \_\_weak typedof\(self\)weakSelf = self;
 
 ### 3.\_\_block在arc和非arc下含义一样吗？ {#3block在arc和非arc下含义一样吗}
-
+> 
 是不一样的。  
 在MRC中\_\_block variable在block中使用是不會retain的  
 但是ARC中\_\_block則是會Retain的。  
@@ -41,7 +41,7 @@ assign其实也可以用来修饰对象，那么我们为什么不用它呢？�
 ```
 
 ### 4.使用nonatomic一定是线程安全的吗？（） {#4使用nonatomic一定是线程安全的吗}
-
+> 
 不是的。  
 atomic原子操作，系统会为setter方法加锁。 具体使用 @synchronized\(self\){//code }  
 nonatomic不会为setter方法加锁。  
@@ -49,7 +49,7 @@ atomic：线程安全，需要消耗大量系统资源来为属性加锁
 nonatomic：非线程安全，适合内存较小的移动设备
 
 ### 5.描述一个你遇到过的retain cycle例子。 {#5描述一个你遇到过的retain-cycle例子}
-
+> 
 block中的循环引用：一个viewController
 
 ```
@@ -61,7 +61,7 @@ block中的循环引用：一个viewController
     }];
 
 ```
-
+> 
 self 拥有\_handler, \_handler 拥有block, block拥有self（因为使用了self的\_data属性，block会copy 一份self）  
 解决方法：
 
@@ -74,25 +74,25 @@ self 拥有\_handler, \_handler 拥有block, block拥有self（因为使用了se
 ```
 
 ### 6.+\(void\)load; +\(void\)initialize；有什么用处？ {#6voidload-voidinitialize有什么用处}
-
+> 
 在[Objective-C](http://lib.csdn.net/base/objective-c)中，runtime会自动调用每个类的两个方法。+load会在类初始加载时调用，+initialize会在第一次调用类的类方法或实例方法之前被调用。这两个方法是可选的，且只有在实现了它们时才会被调用。  
 共同点：两个方法都只会被调用一次。
 
 ### 7.为什么其他语言里叫函数调用， objective c里则是给对象发消息（或者谈下对runtime的理解） {#7为什么其他语言里叫函数调用-objective-c里则是给对象发消息或者谈下对runtime的理解}
-
+> 
 先来看看怎么理解发送消息的含义：
-
+>
 曾经觉得Objc特别方便上手，面对着 Cocoa 中大量 API，只知道简单的查文档和调用。还记得初学 Objective-C 时把\[receiver message\]当成简单的方法调用，而无视了“发送消息”这句话的深刻含义。于是\[receiver message\]会被编译器转化为：  
 `objc_msgSend(receiver, selector)`  
 如果消息含有参数，则为：  
 `objc_msgSend(receiver, selector, arg1, arg2, ...)`
-
+> 
 如果消息的接收者能够找到对应的selector，那么就相当于直接执行了接收者这个对象的特定方法；否则，消息要么被转发，或是临时向接收者动态添加这个selector对应的实现内容，要么就干脆玩完崩溃掉。
-
+> 
 现在可以看出\[receiver message\]真的不是一个简简单单的方法调用。因为这只是在编译阶段确定了要向接收者发送message这条消息，而receive将要如何响应这条消息，那就要看运行时发生的情况来决定了。
-
+> 
 Objective-C 的 Runtime 铸就了它动态语言的特性，这些深层次的知识虽然平时写代码用的少一些，但是却是每个 Objc 程序员需要了解的。
-
+> 
 Objc Runtime使得C具有了面向对象能力，在程序运行时创建，检查，修改类、对象和它们的方法。可以使用runtime的一系列方法实现。
 
 顺便附上OC中一个类的[数据结构](http://lib.csdn.net/base/datastructure)/usr/include/objc/runtime.h
@@ -133,13 +133,13 @@ OC中一个类的对象实例的数据结构（/usr/include/objc/objc.h）:
 
     typedef struct objc_object *id;
 ```
-
+> 
 向object发送消息时，Runtime库会根据object的isa指针找到这个实例object所属于的类，然后在类的方法列表以及父类方法列表寻找对应的方法运行。id是一个objc\_object结构类型的指针，这个类型的对象能够转换成任何一种对象。
-
+> 
 然后再来看看消息发送的函数：objc\_msgSend函数
-
+> 
 在引言中已经对objc\_msgSend进行了一点介绍，看起来像是objc\_msgSend返回了数据，其实objc\_msgSend从不返回数据而是你的方法被调用后返回了数据。下面详细叙述下消息发送步骤：
-
+> 
 检测这个 selector 是不是要忽略的。比如 Mac OS X 开发，有了垃圾回收就不理会 retain,release 这些函数了。  
 检测这个 target 是不是 nil 对象。ObjC 的特性是允许对一个 nil 对象执行任何一个方法不会 Crash，因为会被忽略掉。  
 如果上面两个都过了，那就开始查找这个类的 IMP，先从 cache 里面找，完了找得到就跳到对应的函数去执行。  
@@ -155,17 +155,17 @@ OC中一个类的对象实例的数据结构（/usr/include/objc/objc.h）:
 
 ### 8.什么是method swizzling? {#8什么是method-swizzling}
 
-Method Swizzling 原理（方法搅拌？）
-
+**Method Swizzling 原理（方法搅拌？）**
+> 
 在Objective-C中调用一个方法，其实是向一个对象发送消息，查找消息的唯一依据是selector的名字。利用Objective-C的动态特性，可以实现在运行时偷换selector对应的方法实现，达到给方法挂钩的目的。  
 每个类都有一个方法列表，存放着selector的名字和方法实现的映射关系。IMP有点类似函数指针，指向具体的Method实现。
-
+> 
 ![](http://img.blog.csdn.net/20150413222619384 "方法指向")
-
+> 
 我们可以利用 method\_exchangeImplementations 来交换2个方法中的IMP，
-
+> 
 我们可以利用 class\_replaceMethod 来修改类，
-
+> 
 我们可以利用 method\_setImplementation 来直接设置某个方法的IMP，  
 ……  
 归根结底，都是偷换了selector的IMP，如下图所示：  
@@ -174,9 +174,9 @@ Method Swizzling 原理（方法搅拌？）
 详情：[http://blog.csdn.net/yiyaaixuexi/article/details/9374411](http://blog.csdn.net/yiyaaixuexi/article/details/9374411)
 
 ### 9.UIView和CALayer是啥关系？ {#9uiview和calayer是啥关系}
-
+> 
 1.UIView是[iOS](http://lib.csdn.net/base/ios)系统中界面元素的基础，所有的界面元素都继承自它。它本身完全是由CoreAnimation来实现的 （Mac下似乎不是这样）。它真正的绘图部分，是由一个叫CALayer（Core Animation Layer）的类来管理。 UIView本身，更像是一个CALayer的管理器，访问它的跟绘图和跟坐标有关的属性，例如frame，bounds等 等，实际上内部都是在访问它所包含的CALayer的相关属性。
-
+> 
 2.UIView有个layer属性，可以返回它的主CALayer实例，UIView有一个layerClass方法，返回主layer所使用的 类，UIView的子类，可以通过重载这个方法，来让UIView使用不同的CALayer来显示，例如通过
 
 ```
@@ -185,8 +185,8 @@ Method Swizzling 原理（方法搅拌？）
     }
 ```
 
-=使某个UIView的子类使用GL来进行绘制。
-
+使某个UIView的子类使用GL来进行绘制。
+> 
 3.UIView的CALayer类似UIView的子View树形结构，也可以向它的layer上添加子layer，来完成某些特殊的表 示。例如下面的代码
 
 ```
@@ -196,11 +196,11 @@ grayCover.backgroundColor = [[[UIColor blackColor] colorWithAlphaComponent:0.2] 
 
 [self.layer addSubLayer: grayCover];
 ```
-
+> 
 会在目标View上敷上一层黑色的透明薄膜。
-
+> 
 4.UIView的layer树形在系统内部，被系统维护着三份copy（这段理解有点吃不准）。
-
+> 
 1. 逻辑树，就是代码里可以操纵的，例如更改layer的属性等等就在这一份。
 2. 动画树，这是一个中间层，系统正在这一层上更改属性，进行各种渲染操作。
 3. 显示树，这棵树的内容是当前正被显示在屏幕上的内容。
@@ -208,13 +208,13 @@ grayCover.backgroundColor = [[[UIColor blackColor] colorWithAlphaComponent:0.2] 
 这三棵树的逻辑结构都是一样的，区别只有各自的属性。
 
 ### 10. 如何高性能的给UIImageView加个圆角？（不准说layer.cornerRadius!） {#10-如何高性能的给uiimageview加个圆角不准说layercornerradius}
-
+> 
 我觉得应该是使用Quartz2D直接绘制图片,得把这个看看。  
 步骤：  
-　　a、创建目标大小\(cropWidth，cropHeight\)的画布。
-
+a、创建目标大小\(cropWidth，cropHeight\)的画布。
+> 
 　　b、使用UIImage的drawInRect方法进行绘制的时候，指定rect为\(-x，-y，width，height\)。
-
+> 
 　　c、从画布中得到裁剪后的图像。
 
 ```
@@ -238,7 +238,7 @@ grayCover.backgroundColor = [[[UIColor blackColor] colorWithAlphaComponent:0.2] 
 ```
 
 ### 11. 使用drawRect有什么影响？（这个可深可浅，你至少得用过。。） {#11-使用drawrect有什么影响这个可深可浅你至少得用过}
-
+> 
 drawRect方法依赖Core Graphics框架来进行自定义的绘制，但这种方法主要的缺点就是它处理touch事件的方式：每次按钮被点击后，都会用setNeddsDisplay进行强制重绘；而且不止一次，每次单点事件触发两次执行。这样的话从性能的角度来说，对CPU和内存来说都是欠佳的。特别是如果在我们的界面上有多个这样的UIButton实例。
 
 ### 12. ASIHttpRequest或者SDWebImage里面给UIImageView加载图片的逻辑是什么样的？ {#12-asihttprequest或者sdwebimage里面给uiimageview加载图片的逻辑是什么样的}
@@ -246,50 +246,48 @@ drawRect方法依赖Core Graphics框架来进行自定义的绘制，但这种�
 详见SDWebImage的实现流程[http://www.cnblogs.com/6duxz/p/4159572.html](http://www.cnblogs.com/6duxz/p/4159572.html)
 
 ### 13. 麻烦你设计个简单的图片内存缓存器（移除策略是一定要说的） {#13-麻烦你设计个简单的图片内存缓存器移除策略是一定要说的}
-
+> 
 图片的内存缓存，可以考虑将图片数据保存到一个数据模型中。所以在程序运行时这个模型都存在内存中。  
-移除策略：释放数据模型对象。
+**移除策略**：释放数据模型对象。
 
 ### 14. 讲讲你用Instrument优化动画性能的经历吧（别问我什么是Instrument） {#14-讲讲你用instrument优化动画性能的经历吧别问我什么是instrument}
 
 可以参考[iOS App性能优化](http://www.hrchen.com/2013/05/performance-with-instruments/)
 
 ### 15. loadView是干嘛用的？ {#15-loadview是干嘛用的}
-
+> 
 当你访问一个ViewController的view属性时，如果此时view的值是nil，那么，ViewController就会自动调用loadView这个方法。这个方法就会加载或者创建一个view对象，赋值给view属性。  
 loadView默认做的事情是：如果此ViewController存在一个对应的nib文件，那么就加载这个nib。否则，就创建一个UIView对象。
-
+> 
 如果你用Interface Builder来创建界面，那么不应该重载这个方法。
-
+> 
 如果你想自己创建view对象，那么可以重载这个方法。此时你需要自己给view属性赋值。你自定义的方法不应该调用super。如果你需要对view做一些其他的定制操作，在viewDidLoad里面去做。
-
+>
 =========================================
-
+>
 根据上面的文档可以知道，有两种情况：
-
+>
 1、如果你用了nib文件，重载这个方法就没有太大意义。因为loadView的作用就是加载nib。如果你重载了这个方法不调用super，那么nib文件就不会被加载。如果调用了super，那么view已经加载完了，你需要做的其他事情在viewDidLoad里面做更合适。
-
+>
 2、如果你没有用nib，这个方法默认就是创建一个空的view对象。如果你想自己控制view对象的创建，例如创建一个特殊尺寸的view，那么可以重载这个方法，自己创建一个UIView对象，然后指定 self.view = myView; 但这种情况也没有必要调用super，因为反正你也不需要在super方法里面创建的view对象。如果调用了super，那么就是浪费了一些资源而已  
 参考：[http://www.cnblogs.com/dyllove98/archive/2013/06/06/3123005.html](http://www.cnblogs.com/dyllove98/archive/2013/06/06/3123005.html)
 
 ### 16. viewWillLayoutSubView你总是知道的。 {#16-viewwilllayoutsubview你总是知道的}
-
+> 
 横竖屏切换的时候，系统会响应一些函数，其中 viewWillLayoutSubviews 和 viewDidLayoutSubviews。
 
 //
 
-```
-- (void)viewWillLayoutSubviews
-{
+```objectivec
+- (void)viewWillLayoutSubviews{
   [self _shouldRotateToOrientation:(UIDeviceOrientation)[UIApplication sharedApplication].statusBarOrientation];
 }
 
 -(void)_shouldRotateToOrientation:(UIDeviceOrientation)orientation {
 if (orientation == UIDeviceOrientationPortrait ||orientation == UIDeviceOrientationPortraitUpsideDown) {
-          // 竖屏
-}
-else {
-         // 横屏
+    // 竖屏
+}else {
+    // 横屏
     }
 }
 
@@ -299,7 +297,7 @@ else {
 注意：viewWillLayoutSubviews只能用在ViewController里面，在view里面没有响应。
 
 ### 17. GCD里面有哪几种Queue？你自己建立过串行queue吗？背后的线程模型是什么样的？ {#17-gcd里面有哪几种queue你自己建立过串行queue吗背后的线程模型是什么样的}
-
+> 
 1.主队列 dispatch\_main\_queue\(\); 串行 ，更新UI  
 2.全局队列 dispatch\_global\_queue\(\); 并行，四个优先级：background，low，default，high  
 3.自定义队列 dispatch\_queue\_t queue ; 可以自定义是并行：DISPATCH\_QUEUE\_CONCURRENT或者串行DISPATCH\_QUEUE\_SERIAL
