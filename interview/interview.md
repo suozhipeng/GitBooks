@@ -1,4 +1,4 @@
-  ## 搜集的Interview资料
+  ## 搜集的Interview 资料
   1. [Interface-面试Leader](interview/interfacexiang-guan.md)
   * [Interview-iOS-01-Ask&Answer](interview/interview-ios-05.md)
   * [Interview-iOS-02-原理](interview/interview-ios-06.md)
