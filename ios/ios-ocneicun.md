@@ -54,7 +54,7 @@ return self;
 ```
 
 ### 问题： 为什么很多内置的类，如TableViewController的delegate的属性是assign不是retain?
->
+> 
 delegate代理的属性通常设置为assign或者weak是为了避免循环引用，所有的引用计数系统，都存在循环引用的问题，但也有个别特殊情况，个别类的代理例如CAAnimation的delegate就是使用strong强引用。
 
 **其他问法： 委托的property声明用什么属性？为什么？**
@@ -70,7 +70,9 @@ CAAnimation的代理定义如下，明确说了动画的代理在动画对象整
 
 @property(nullable, strong) id <CAAnimationDelegate> delegate;
 ```
-### 问题： OC中，与alloc语义相反的方法是dealloc还是release？与retain语义相反的方法是dealloc还是release？需要与alloc配对使用的方法是dealloc还是release，为什么？
+### 问题： OC中，与alloc语义相反的方法是dealloc还是release？
+1. 与retain语义相反的方法是dealloc还是release？
+2. 需要与alloc配对使用的方法是dealloc还是release，为什么？
 
 alloc与dealloc语意相反，alloc是创建变量，dealloc是释放变量；
 
@@ -109,6 +111,31 @@ Ball *ball = [[[[Ball alloc] init] autorelease] autorelease];
 当使用new、alloc或copy方法创建一个对象时，该对象引用计数器为1。不再需要使用该对象时可以向其发送release或autorelease消息，在其使用完毕时被系统释放。如果retain了某个对象，需要对应release或autorelease该对象，保持retain方法和release方法使用次数相等。
 
 使用new、alloc、copy关键字生成的对象和retain了的对象需要手动释放。设置为autorelease的对象不需要手动释放，会直接进入自动释放池。
+
+### 问题：Objective-C是如何实现内存管理的？
+> `autorealease pool`自动释放池是什么？
+`autorelease`的对象是在什么时候被`release`的？
+`autorelease`和`release`有什么区别？
+
+- 引用计数
+
+Objective-C的内存管理本质上是通过引用计数实现的，每次`RunLoop`都会检查对象的引用计数，如果引用计数为0，说明该对象已经没人用了，可以对其进行释放了。其中引用计数可以大体分为三种：MRC(手动内存计数)、ARC(自动内存计数，iOS5以后)和内存池。
+
+其中引用计数是如何操作的呢？不论哪种引用计数方式，本质都是在合适的时机将对象的引用计数加1或者减1。
+
+这里简单归结一下：
+
+使对象引用计数加1的常见操作有：`alloc`、`copy`、`retain`
+使对象引用计数减1的常见操作有：`release`、`autorealease`
+
+- 自动释放池
+
+自动释放池是一个统一来释放一组对象的容器，在向对象发送`autorelease`消息时，对象并没有立即释放，而是将对象加入到最新的自动释放池（即将该对象的引用交给自动释放池，之后统一调用`release`），自动释放池会在程序执行到作用域结束的位置时进行`drain`释放操作，这个时候会对池中的每一个对象都发送`release`消息来释放所有对象。这样其实就实现了这些对象的延迟释放。
+
+自动释放池释放的时机，也就是自动释放池内的所有对象是在什么时候释放的，这里要提到程序的运行周期`RunLoop`。对于每一个新的`RunLoop`，系统都会隐式的创建一个`autorelease pool`，`RunLoop`结束时自动释放池便会进行对象释放操作。
+
+ `autorelease`和`release`的区别主要是引用计数减一的时机不同,autorelease会在对象的使用真正结束的时候才做引用计数减1，而不是收到消息立马释放。
+
 
 ### 下面代码的输出依次为：
 ```objectivec
