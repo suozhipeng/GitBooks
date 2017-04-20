@@ -176,7 +176,7 @@ NSString *str5 = [[NSString alloc] initWithString:@"string"]; // 编译器优化
 ### 问题： 这段代码有什么问题,如何修改？
 ```objectivec
 for (int i = 0; i < someLargeNumber; i++) {
-    NSString *string = @”Abc”;
+    NSString *string = @"Abc";
     string = [string lowercaseString];
     string = [string stringByAppendingString:@"xyz"];
     NSLog(@“%@”, string);
@@ -200,7 +200,7 @@ for (int i = 0; i < 1000000; i++) {
 ### 相关问题： 这段代码有什么问题？会不会造成内存泄露（多线程）？在内存紧张的设备上做大循环时自动释放池是写在循环内好还是循环外好？为什么？
 ```objectivec
 for(int index = 0; index < 20; index++) {
-    NSString *tempStr = @”tempStr”;
+    NSString *tempStr = @"tempStr";
     NSLog(tempStr);
     NSNumber *tempNumber = [NSNumber numberWithInt:2];
     NSLog(tempNumber);
