@@ -154,3 +154,41 @@ NSString *str5 = [[NSString alloc] initWithString:@"string"]; // 编译器优化
 - 全都不对
 - 这个新创建的字符串对象已经被release了
 
+
+### 问题：什么是安全释放？
+
+释放掉不再使用的对象同时不会造成内存泄漏或指针悬挂问题称其为安全释放。
+
+### 问题： 这段代码有什么问题,如何修改？
+```objectivec
+for (int i = 0; i < someLargeNumber; i++) {
+    NSString *string = @"Abc";
+    string = [string lowercaseString];
+    string = [string stringByAppendingString:@"xyz"];
+    NSLog(@“%@”, string);
+}
+```
+代码通过循环短时间内创建了大量的NSString对象，在默认的自动释放池释放之前这些对象无法被立即释放，会占用大量内存，造成内存高峰以致内存不足。
+
+为了防止大量对象堆积应该在循环内手动添加自动释放池，这样在每一次循环结束，循环内的自动释放池都会被自动释放及时腾出内存，从而大大缩短了循环内对象的生命周期，避免内存占用高峰。
+
+代码改进方法是在循环内部嵌套一个自动释放池：
+```objectivec
+for (int i = 0; i < 1000000; i++) {
+    @autoreleasepool {
+        NSString *string = @"Abc";
+        string = [string lowercaseString];
+        string = [string stringByAppendingString:@"xyz"];
+        NSLog(@"%@",string);
+    }
+}
+```
+### 相关问题： 这段代码有什么问题？会不会造成内存泄露（多线程）？在内存紧张的设备上做大循环时自动释放池是写在循环内好还是循环外好？为什么？
+```objectivec
+for(int index = 0; index < 20; index++) {
+    NSString *tempStr = @"tempStr";
+    NSLog(tempStr);
+    NSNumber *tempNumber = [NSNumber numberWithInt:2];
+    NSLog(tempNumber);
+}
+```
