@@ -30,4 +30,26 @@ GC(Garbage Collection)，垃圾回收机制，简单地说就是程序中及时�
 > 
 首先对于NotificationCenter的使用，我们都知道，只要添加对象到消息中心进行通知注册，之后就一定要对其remove进行通知注销。将对象添加到消息中心后，消息中心只是保存该对象的地址，消息中心到时候会根据地址发送通知给该对象，但并没有取得该对象的强引用，对象的引用计数不会加1。如果对象释放后却没有从消息中心remove掉进行通知注销，也就是通知中心还保存着那个指针，而那个指针指的对象可能已经被释放销毁了，那个指针就成为一个野指针，当通知发生时，会向这个野指针发送消息导致程序崩溃。
 
+- **retain、release和autorelease的底层实现**
+最后通过了解这三者的较底层实现来理解它们的本质区别：
+
+
+```objectivec
+-(id)retain {
+// 对象引用计数加1
+NSIncrementExtraRefCount(self);
+return self;
+}
+-(void)release {
+// 对象引用计数减1，之后如果引用计数为0则释放
+if(NSDecrementExtraRefCountWasZero(self)) {
+NSDeallocateObject(self);
+}
+}
+-(id)autorelease {
+// 添加对象到自动释放池
+[NSAutoreleasePool addObject:self];
+return self;
+}
+```
 ---
