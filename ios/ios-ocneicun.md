@@ -107,3 +107,36 @@ Person *person = [[Person alloc] init];
 ```
 1-2-1-0。开始alloc创建对象并持有对象，初始引用计数为1，retain一次引用计数加1变为2，之后release对象两次，引用计数减1两次，先后变为1、0。
 
+### 问题：执行下面的代码会发生什么后果？ 
+```objectivec
+Ball *ball = [[[[Ball alloc] init] autorelease] autorelease];
+```
+程序会因其而崩溃，因为对象被加入到自动释放池两次，当对象被移除时，自动释放池将其释放了不止一次，其中第二次释放必定导致崩溃。
+
+### 问题：内存管理
+> 内存管理的几条原则是什么？
+按照默认法则，哪些关键字生成的对象需要手动释放？
+哪些对象不需要手动释放会自动进入释放池？
+在和property结合的时候怎样有效的避免内存泄露？
+
+起初MRC中开发者要自己手动管理内存，基本原则是：谁创建，谁释放，谁引用，谁管理。其中创建主要始于关键词new、alloc和copy的使用，创建并持有开始引用计数为1，如果引用要通过发送retain消息增加引用计数，通过发送release消息减少引用计数，引用计数为0后对象会被系统清理释放。现在有了ARC后编译器会自动管理引用计数，开发者不再需要也不可以再手动显示管理引用计数。
+
+当使用new、alloc或copy方法创建一个对象时，该对象引用计数器为1。不再需要使用该对象时可以向其发送release或autorelease消息，在其使用完毕时被系统释放。如果retain了某个对象，需要对应release或autorelease该对象，保持retain方法和release方法使用次数相等。
+
+使用new、alloc、copy关键字生成的对象和retain了的对象需要手动释放。设置为autorelease的对象不需要手动释放，会直接进入自动释放池。
+
+### 下面代码的输出依次为：
+```objectivec
+    NSMutableArray* ary = [[NSMutableArray array] retain];
+    NSString *str = [NSString stringWithFormat:@"test"];
+    [str retain];
+    [ary addObject:str];
+    NSLog(@"%@%d",str,[str retainCount]);
+    [str retain];
+    [str release];
+    [str release];
+    NSLog(@"%@%d",str,[str retainCount]);
+    [ary removeAllObjects];
+    NSLog(@"%@%d",str,[str retainCount]);
+```
+
