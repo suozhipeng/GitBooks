@@ -5,14 +5,12 @@ _书籍推荐📚：_[Effective Objective-C 2.0](https://book.douban.com/subject
 [http://blog.csdn.net/cordova/article/details/53876682](http://blog.csdn.net/cordova/article/details/53876682)
 
 ---
-* [1.动态类型](#1)
- 
 
 > OC语言的动态性主要体现在三个方面：
 >
-> * [动态类型\(Dynamic typing\): ](#动态类型)
+> * 动态类型\(Dynamic typing\): 
 >   id类型
-> * [动态绑定\(Dynamic binding\)](#动态绑定)
+> * 动态绑定\(Dynamic binding\)
 > * 动态加载\(Dynamic loading\)
 
 * 动态类型识别方法\(面向对象语言的内省Introspection特性\)
@@ -75,7 +73,7 @@ SEL funcID = @select(func)；// 这个注册事件回调时常用，将方法转
 SEL funcID = NSSelectorFromString(@"func"); // 根据方法名得到方法标识
 NSString *funcName = NSStringFromSelector(funcID); // 根据SEL类型得到方法名字符串
 ```
-** <a name="动态绑定"></a> 动态绑定**
+** 动态绑定**
 > 
 动态绑定指的是**方法确定的动态性**，具体指的是利用OC的消息传递机制将要执行的方法的确定推迟到运行时，可以动态添加方法。
 >
@@ -88,9 +86,116 @@ NSString *funcName = NSStringFromSelector(funcID); // 根据SEL类型得到方�
 > 
 动态加载主要包括两个方面，一个是**动态资源加载**，一个是一**些可执行代码模块的加载**，这些资源在运行时根据需要动态的选择性的加入到程序中，是一种**代码和资源的‘懒加载’模式**，可以降低内存需求，提高整个程序的性能，另外也大大提高了可扩展性。
 
+
+官方运行时源码：https://opensource.apple.com/source/objc4/objc4-532/runtime/
+
+OC运行时编程指南：Objective-C Runtime Programming Guide
+
+Cocoa消息 Cocoa类与对象
+
+**问题： 我们所说的Objective-C是动态运行时语言是什么意思？**
+> 
+主要指的是OC语言的动态性，包括动态性和多态性两个方面。
+> 
+动态性：即OC的动态类型、动态绑定和动态加载特性，将对象类型的确定、方法调用的确定、代码和资源的装载等推迟到运行时进行，更加灵活；
+多态：多态是面向对象变成语言的特性，OC作为一门面向对象的语言，自然具备这种多态性，多态性指的是来自不同类的对象可以接受同一消息的能力，或者说不同对象以自己的方式响应相同的消息的能力。
+问题： 
+动态绑定是在运行时确定要调用的方法？
+
+动态绑定将调用方法的确定推迟到运行时。在编译时，方法的调用并不和代码绑定在一起，只有在消实发送出来之后，才确定被调用的代码。通过动态类型和动态绑定技术，代码每次执行都可以得到不同的结果。运行时负责确定消息的接收者和被调用的方法。运行时的消息分发机制为动态绑定提供支持。当向一个动态类型确定了的对象发送消息时，运行环境会通过接收者的isa指针定位对象的类，并以此确定被调用的方法，方法是动态绑定的。
+
+问题： 
+解释OC中的id类型？id、nil代表什么?
+
+id表示变量或对象的类型在编写代码时(编译期)不确定，视为任意类型，直到程序跑起来推迟到运行时才最终确定其类型。id类似于C/C++中的void *,但id和void*并非完全一样。id是一个指向继承了NSObject的OC对象的指针，注意id是一个指针，虽然省略了*号。id和C语言的void*之间需要通过bridge关键字来显式的桥接转换。具体转换方式示例如下：
+```objectivec
+id nsobj = [[NSObject alloc] init];
+void *p = (__bridge void *)nsobj;
+id nsobj = (__bridge id)p;
+```
+OC中的nil定义在objc/objc.h中，表示的是一个指向空的Objctive-C对象的指针。例如weak修饰的弱引用对象在指向的对象释放时会自动将指针置为nil，即空对象指针，防止‘指针悬挂’。
+
+问题： 
+instancetype和id的区别？
+
+instancetype和id都可以用来代表任意类型，将对象的类型确定往后推迟，用于体现OC语言的动态性，使其声明的对象具有运行时的特性。
+
+它们的区别是：instancetype只能作为返回值类型，但在编译期instancetype会进行类型检测，因此对于所有返回类的实例的类方法或实例方法，建议返回值类型全部使用instancetype而不是id，具体原因后面举例介绍；id类型既可以作为返回值类型,也可以作为参数类型,也可以作为变量的类型，但id类型在编译期不会进行类型检测。
+
+问题： 一般的方法method和OC中的选择器selector有何不同？
+
+selector是一个方法的名字，基于动态绑定环境下，method是一个组合体，包含了名字和实现。
+
+可以理解@selector()就是取类方法的编号,他的行为基本可以等同C语言的中函数指针,只不过C语言中，可以把函数名直接赋给一个函数指针，而Objective-C的类不能直接应用函数指针，这样只能做一个@selector语法来取. 它的结果是一个SEL类型。这个类型本质是类方法的编号(函数地址)。
+
+问题：什么是目标-动作(target-action)机制?
+
+目标是动作消息的接收者。例如一个控件，或者更为常见的是它的单元， 
+以插座变量的形式保有其动作消息的目标。 动作是控件发送给目标的消息，或者从目标的角度看，它是目标为了响应动作而实现的方法。程序需要某些机制来进行事件和指令的翻译。这个机制就是目标-动作机制。
+
+问题：下列代码取决于Objective-C的哪样特性？
+```objectivec
+id myobj;
+... ...
+[myobj draw];
+```
+预处理机制
+枚举数据类型
+静态类型
+动态类型(right)
+问题： Object-C有私有方法吗? 私有变量呢?
+
+首先要看私有的含义。私有主要指的是通过类的封装性，将不希望让外界看到的方法或属性隐藏在类内部，只有该类可以在内部访问，外部不可见不可访问。
+
+表面上OC中是可以实现私有的变量和方法的，即将它们隐藏不暴露在头文件，不可以显式地直接访问，但是OC中这种私有并不是绝对的私有，例如即使将变量和方法隐藏在.m实现文件中，开发者仍然可以利用runtime运行时机制强行访问没有暴露在头文件的变量和方法。
+
+OC中实现变量和方法‘私有‘的方式： 
+一种是在类的头文件中生命私有变量：
+```objectivec
+#import <Foundation/Foundation.h>
+
+@interface Test : NSObject {
+    /* 头文件中定义私有变量，默认为@protected */
+    @private
+    NSString *major;
+}
+
+@end
+```
+另外一种是在.m实现文件头部的类扩展区域定义私有属性或方法，其中方法可不用声明，直接在实现文件中实现即可，只要不在头文件生命的方法都对外不可见：
+
+
+```objectivec
+#import "Test.h"
+@interface Test() {
+/* 类扩展区域定义私有变量，默认就是@private */
+int age;
+}
+
+/* 类扩展区域定义私有属性 */
+@property (nonatomic, copy) NSString *name;
+
+/* 类扩展区域定义私有实例方法(可省略声明，类方法的作用主要就是提供对外接口的，所以一般不会定义为私有) */
+- (void)test;
+
+@end
+
+@implementation Test
+
+/**
+* 私有实例方法
+*/
+- (void)test {
+NSLog(@"这是个私有实例方法！");
+}
+@end
+
+```
+
+
 ---
 
-## <id="1">Objective-C语言消息传递机制三道防线：消息转发机制详解
+## Objective-C语言消息传递机制三道防线：消息转发机制详解
 
 原文链接：[http://blog.csdn.net/cordova/article/details/70181837](http://blog.csdn.net/cordova/article/details/70181837)
 
