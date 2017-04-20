@@ -13,7 +13,7 @@ interview-iOS PartThree (profound understanding)
 
 
 
-```
+```objectivec
  NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
  NSURLSession * session = [NSURLSession sessionWithConfiguration:configuration];
  NSURLSessionDataTask *localDataTask = [session dataTaskWithURL:nil];
@@ -41,7 +41,7 @@ interview-iOS PartThree (profound understanding)
 - ARC下面,我们使用`@autoreleasepool{}`来使用一个Autoreleasepool,实际上UIKit 通过RunLoopObserver 在RunLoop二次Sleep间Autoreleasepool进行Pop和Push,将这次Loop产生的autorelease对象释放 对编译器会编译大致如下:
 
 
-```
+```objectivec
 void *DragonLiContext = objc_ AutoreleasepoolPush();
 // {} 的 code 
 objc_ AutoreleasepoolPop(DragonLiContext);
@@ -62,7 +62,8 @@ ARC优化器: 虽然前端编译器听起来很厉害的样子，但代码中有
 ---
 
 
-```
+```objectivec
+
 	objc_storeWeak() 实现 
 // HaveOld:	 true - 变量有值
 // 			false - 需要被及时清理，当前值可能为 nil
@@ -164,7 +165,8 @@ NSURLSessionDataTask 大文件离线断点下载 (AFN等框架,旧的connection�
 2.NSOutputStream 输出流
 
 
-```
+```objectivec
+
 // code copy from jianshu 
 ///: 1. NSFileHandle
 -(void)URLSession:(NSURLSession *)session dataTask:(nonnull NSURLSessionDataTask *)dataTask 
@@ -228,7 +230,8 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
 ```
 开始(resume) | 暂停(suspend) | 取消( | 恢复等
 
-```
+```objectivec
+
 [self.dataTask cancel];
 //默认情况下取消下载不能进行恢复，若要取消之后还可以恢复，可以清空下载任务，再新建
 self.dataTask = nil;
@@ -253,9 +256,7 @@ self.dataTask = nil;
 
 - AsyncSocket 相关代码
 
-
-
-```
+```objectivec
 
 // socket连接
 -(void)socketConnectHost{}
