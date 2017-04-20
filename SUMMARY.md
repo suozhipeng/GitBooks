@@ -57,5 +57,6 @@
 * [Tools IDE工具使用](tools/tools.md)
   * [Xcode](tools/xcode.md)
   * [Mac](tools/mac.md)
-  * [GIt](tools/toolsgitmd.md)
+  * [Git](tools/toolsgitmd.md)
+  * [绕开百度云的方法](tools/awayfrombaidu.md)
 
