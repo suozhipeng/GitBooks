@@ -118,10 +118,7 @@ Ball *ball = [[[[Ball alloc] init] autorelease] autorelease];
 
 使用new、alloc、copy关键字生成的对象和retain了的对象需要手动释放。设置为autorelease的对象不需要手动释放，会直接进入自动释放池。
 
-### 问题：Objective-C是如何实现内存管理的？
-
-autorealease pool自动释放池是什么？autorelease的对象是在什么时候被release的？autorelease和release有什么区别？  
-![](/assets/OC实现内存管理-自动释放池.png)
+### 问题：Objective-C是如何实现内存管理的？![](/assets/OC实现内存管理-自动释放池.png)
 
 ### 下面代码的输出依次为：
 
