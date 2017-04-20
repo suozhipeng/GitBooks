@@ -8,7 +8,7 @@
 * [iOS原理解析](ios/yuan-ma-jie-xi.md)
   * [iOS-目录技能](ios/skill-list.md)
   * [iOS-视图生命周期](ios/iosshi-tu-sheng-ming-zhou-qi.md)
-  * [iOS-OC-内存管理](ios/ios-ocnei-cun-guan-li.md)
+  * [iOS-OC-内存管理](ios/ios-ocneicun.md)
   * [iOS RunTime](ios/ios-runtime.md)
   * [iOS-KVC、KVO实现原理](ios/ios-kvckvo.md)
   * [iOS-Data缓存](ios/iosdatacache.md)
@@ -58,4 +58,3 @@
   * [Xcode](tools/xcode.md)
   * [Mac](tools/mac.md)
   * [GIt](tools/toolsgitmd.md)
-
