@@ -1,6 +1,6 @@
 ## 【iOS沉思录】iOS内存管理试题总结与详解
 
-> 原文链接：[http://blog.csdn.net/cordova/article/details/60958978](http://blog.csdn.net/cordova/article/details/60958978)
+> 原文链接:http://blog.csdn.net/cordova/article/details/60958978
 
 ---
 
@@ -314,7 +314,7 @@ typedef void (^MYBlock)();
 
 ```
 
-解决上面的引用循环的方法一个是强制将一方置nil，破坏引用循环，另外一种方法是将对象使用** _ _weak**或者** _ _block**修饰符修饰之后再在block中使用 (注意是在ARC下)：
+解决上面的引用循环的方法一个是强制将一方置nil，破坏引用循环，另外一种方法是将对象使用` _ _weak`或者 `_ _block`修饰符修饰之后再在block中使用 (注意是在ARC下)：
 
 ```objectivec
 - (void)print {
