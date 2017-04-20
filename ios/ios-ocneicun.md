@@ -52,4 +52,39 @@ NSDeallocateObject(self);
 return self;
 }
 ```
----
+
+### 问题： 为什么很多内置的类，如TableViewController的delegate的属性是assign不是retain?
+>
+delegate代理的属性通常设置为assign或者weak是为了避免循环引用，所有的引用计数系统，都存在循环引用的问题，但也有个别特殊情况，个别类的代理例如CAAnimation的delegate就是使用strong强引用。
+
+**其他问法： 委托的property声明用什么属性？为什么？**
+
+### 问题： CAAnimation的delegate代理是强引用还是弱引用？
+CAAnimation的代理是强引用，是内存管理中的其中一个罕见的特例。我们知道为了避免循环引用问题，delegate代理一般都使用weak修饰表示弱引用的，而CAAnimation动画是异步的，如果动画的代理是弱应用不是强应用的话，会导致其随时都可能被释放掉。在使用动画时要注意采取措施避免循环引用，例如及时在视图移除之前的合适时机移除动画。
+
+CAAnimation的代理定义如下，明确说了动画的代理在动画对象整个生命周期间是被强引用的，默认为nil。
+```objectivec
+/* The delegate of the animation. This object is retained for the
+ * lifetime of the animation object. Defaults to nil. See below for the
+ * supported delegate methods. */
+
+@property(nullable, strong) id <CAAnimationDelegate> delegate;
+```
+### 问题： OC中，与alloc语义相反的方法是dealloc还是release？与retain语义相反的方法是dealloc还是release？需要与alloc配对使用的方法是dealloc还是release，为什么？
+
+alloc与dealloc语意相反，alloc是创建变量，dealloc是释放变量；
+
+retain与release语义相反，retain保留一个对象，调用后使变量的引用计数加1，而release释放一个对象，调用后使变量的引用计数减1。
+
+虽然alloc对应dealloc，retain对应release，但是与alloc配对使用的方法是release，而不是dealloc。为什么呢？这要从他们的实际效果来看。事实上alloc和release配对使用只是表象，本质上其实还是retain和release的配对使用。alloc用来创建对象，刚创建的对象默认引用计数为1，相当于调用alloc创建对象过程中同时会调用一次retain使对象引用计数加1，自然要有对应的release的一次调用，使对象在不用时能够被释放掉防止内存泄漏。
+
+此外，dealloc是在对象引用计数为0以后系统自动调用的，dealloc没有使对象引用计数减1的作用，只是在对象引用计数为0后被系统调用进行内存回收的收尾工作。
+
+### 问题： 以下每行代码执行后，person对象的retain count分别是多少
+```objectivec
+Person *person = [[Person alloc] init];
+[person retain];
+[person release];
+[person release];
+```
+1-2-1-0。开始alloc创建对象并持有对象，初始引用计数为1，retain一次引用计数加1变为2，之后release对象两次，引用计数减1两次，先后变为1、0。
