@@ -125,43 +125,6 @@ Ball *ball = [[[[Ball alloc] init] autorelease] autorelease];
 
 使用new、alloc、copy关键字生成的对象和retain了的对象需要手动释放。设置为autorelease的对象不需要手动释放，会直接进入自动释放池。
 
-### 下面代码的输出依次为：
-```objectivec
-    NSMutableArray* ary = [[NSMutableArray array] retain];
-    NSString *str = [NSString stringWithFormat:@"test"];
-    [str retain];
-    [ary addObject:str];
-    NSLog(@"%@%d",str,[str retainCount]);
-    [str retain];
-    [str release];
-    [str release];
-    NSLog(@"%@%d",str,[str retainCount]);
-    [ary removeAllObjects];
-    NSLog(@"%@%d",str,[str retainCount]);
-```
-- 2，3，1
-- 3，2，1(right)
-- 1，2，3
-- 2，1，3
-
-> 
-此问题考查的是非MRC下引用计数的使用（只有在MRC下才可以通过retain和release关键字手动管理内存对象，才可以向对象发送retainCount消息获取当前引用计数的值），开始使用类方法stringWithFormat在堆上新创建了一个字符串对象str，str创建并持有该字符串对象默认引用计数为1，之后retain使引用计数加1变为2，然后又动态添加到数组中且该过程同样会让其引用计数加1变为3(数组的add操作是添加对成员对象的强引用)，此时打印结果引用计数为3；之后的三次操作使引用计数加1后又减2，变为2，此时打印引用计数结果为2；最后数组清空成员对象，数组的remove操作会让移除的对象引用计数减1，因此str的引用计数变为了1，打印结果为1。因此先后引用计数的打印结果为：3，2，1。
-
-**这里要特别注意上面为何说stringWithFormat方法是在堆上创建的字符串对象，这里涉及到NSString的内存管理，下面单独对其进行扩展和分析。 **
-OC中常用的创建NSString字符串对象的方法主要有以下五种：
-```objectivec
-// 字面量直接创建
-    NSString *str1 = @"string";
-    // 类方法创建
-    NSString *str2 = [NSString stringWithFormat:@"string"];
-    NSString *str3 = [NSString stringWithString:@"string"]; // 编译器优化后弃用，效果等同于str1的字面量创建方式
-    // 实例方法创建
-    NSString *str4 = [[NSString alloc] initWithFormat:@"string"];
-    NSString *str5 = [[NSString alloc] initWithString:@"string"]; // 编译器优化后弃用，效果等同于str1的字面量创建方式
-```
-开发中推荐的是前两种str1和str2的创建方式，分别用来创建不可变字符串和格式化字符串。最新的编译器优化后弃用了str3的stringWithString和str5的initWithString创建方式，现在这样创建会报警告，说这样创建是多余的，因为实际效果和直接用字面量创建相同，也都是在常量内存区创建一个不可变字符串。另外，此处由于字符串的内容都是“string”，使用str1、str3和str5创建的的字符串对象实际在常量内存区只有一个备份，这是编译器的优化效果，而str2和str4由于是在堆上创建因此各自有自己的备份。
-
-此外最重要的是这五种方法创建的字符串对象所处的内存类型，str1、str3和str5都是创建的不可变字符串，是位于常量内存区的，由系统管理内存；stringWithFormat和initWithFormat创建的都是格式化的动态字符串对象，在堆上创建，需要手动管理内存。
 
 ### 相关问题：当你用stringWithString来创建一个新NSString对象的时候，你可以认为：
 
