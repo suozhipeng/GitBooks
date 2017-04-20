@@ -162,3 +162,109 @@ OC中常用的创建NSString字符串对象的方法主要有以下五种：
 开发中推荐的是前两种str1和str2的创建方式，分别用来创建不可变字符串和格式化字符串。最新的编译器优化后弃用了str3的stringWithString和str5的initWithString创建方式，现在这样创建会报警告，说这样创建是多余的，因为实际效果和直接用字面量创建相同，也都是在常量内存区创建一个不可变字符串。另外，此处由于字符串的内容都是“string”，使用str1、str3和str5创建的的字符串对象实际在常量内存区只有一个备份，这是编译器的优化效果，而str2和str4由于是在堆上创建因此各自有自己的备份。
 
 此外最重要的是这五种方法创建的字符串对象所处的内存类型，str1、str3和str5都是创建的不可变字符串，是位于常量内存区的，由系统管理内存；stringWithFormat和initWithFormat创建的都是格式化的动态字符串对象，在堆上创建，需要手动管理内存。
+
+### 相关问题：当你用stringWithString来创建一个新NSString对象的时候，你可以认为：
+
+- 这个新创建的字符串对象已经被autorelease了(right)
+- 这个新创建的字符串对象已经被retain了
+- 全都不对
+- 这个新创建的字符串对象已经被release了
+
+### 问题：什么是安全释放？
+
+释放掉不再使用的对象同时不会造成内存泄漏或指针悬挂问题称其为安全释放。
+
+### 问题： 这段代码有什么问题,如何修改？
+```objectivec
+for (int i = 0; i < someLargeNumber; i++) {
+    NSString *string = @”Abc”;
+    string = [string lowercaseString];
+    string = [string stringByAppendingString:@"xyz"];
+    NSLog(@“%@”, string);
+}
+```
+代码通过循环短时间内创建了大量的NSString对象，在默认的自动释放池释放之前这些对象无法被立即释放，会占用大量内存，造成内存高峰以致内存不足。
+
+为了防止大量对象堆积应该在循环内手动添加自动释放池，这样在每一次循环结束，循环内的自动释放池都会被自动释放及时腾出内存，从而大大缩短了循环内对象的生命周期，避免内存占用高峰。
+
+代码改进方法是在循环内部嵌套一个自动释放池：
+```objectivec
+for (int i = 0; i < 1000000; i++) {
+    @autoreleasepool {
+        NSString *string = @"Abc";
+        string = [string lowercaseString];
+        string = [string stringByAppendingString:@"xyz"];
+        NSLog(@"%@",string);
+    }
+}
+```
+### 相关问题： 这段代码有什么问题？会不会造成内存泄露（多线程）？在内存紧张的设备上做大循环时自动释放池是写在循环内好还是循环外好？为什么？
+```objectivec
+for(int index = 0; index < 20; index++) {
+    NSString *tempStr = @”tempStr”;
+    NSLog(tempStr);
+    NSNumber *tempNumber = [NSNumber numberWithInt:2];
+    NSLog(tempNumber);
+}
+```
+
+### 问题： 在block内如何修改block外部变量？
+
+在block内部修改block外部变量会编译不通过，提示变量缺少__block修饰，不可赋值。要想在block内部修改block外部变量，则必须在外部定义变量时，前面加上__block修饰符：
+```objectivec
+/* block外部变量 */
+__block int var1 = 0;
+int var2 = 0;
+/* 定义block */
+void (^block)(void) = ^{
+    /* 试图修改block外部变量 */
+    var1 = 100;
+    /* 编译错误，在block内部不可对var2赋值 */
+    // var2 = 1;
+};
+/* 执行block */
+block();
+NSLog(@"修改后的var1:%d",var1); // 修改后的var1:100
+```
+### 问题： 使用block时什么情况会发生引用循环，如何解决？
+
+常见的使用block引起引用循环的情况为：在一个对象中强引用了一个block，在该block中又强引用了该对象，此时就出现了该对象和该block的循环引用，例如：
+```objectivec
+/* Test.h */
+#import <Foundation/Foundation.h>
+/* 声明一个名为MYBlock的block，参数为空，返回值为void */
+typedef void (^MYBlock)();
+
+@interface Test : NSObject
+/* 定义并强引用一个MYBlock */
+@property (nonatomic, strong) MYBlock block;
+/* 对象属性 */
+@property (nonatomic, copy) NSString *name;
+
+- (void)print;
+
+@end
+
+/* Test.m */
+#import "Test.h"
+@implementation Test
+
+- (void)print {
+    self.block = ^{
+        NSLog(@"%@",self.name);
+    };
+    self.block();
+}
+
+@end
+```
+解决上面的引用循环的方法一个是强制将一方置nil，破坏引用循环，另外一种方法是将对象使用__weak或者__block修饰符修饰之后再在block中使用(注意是在ARC下)：
+```objectivec
+- (void)print {
+    __weak typeof(self) weakSelf = self;
+    self.block = ^{
+        NSLog(@"%@",weakSelf.name);
+    };
+    self.block();
+}
+```
