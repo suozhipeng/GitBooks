@@ -196,7 +196,7 @@ for(int index = 0; index < 20; index++) {
 
 ### 问题： 在block内如何修改block外部变量？
 
-在block内部修改block外部变量会编译不通过，提示变量缺少__block修饰，不可赋值。要想在block内部修改block外部变量，则必须在外部定义变量时，前面加上__block修饰符：
+在block内部修改block外部变量会编译不通过，提示变量缺少`__block`修饰，不可赋值。要想在block内部修改block外部变量，则必须在外部定义变量时，前面加上`__block`修饰符：
 ```objectivec
 /* block外部变量 */
 __block int var1 = 0;
@@ -244,7 +244,7 @@ typedef void (^MYBlock)();
 
 @end
 ```
-解决上面的引用循环的方法一个是强制将一方置nil，破坏引用循环，另外一种方法是将对象使用__weak或者__block修饰符修饰之后再在block中使用(注意是在ARC下)：
+解决上面的引用循环的方法一个是强制将一方置nil，破坏引用循环，另外一种方法是将对象使用`__weak`或者`__block`修饰符修饰之后再在block中使用(注意是在ARC下)：
 ```objectivec
 - (void)print {
     __weak typeof(self) weakSelf = self;
