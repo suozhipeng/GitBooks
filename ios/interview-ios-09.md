@@ -42,7 +42,7 @@
 给分类（Category）添加属性  
 利用Runtime实现getter/setter 方法
 
-```
+```objectivec
 @interface ClassName (CategoryName)
 @property (nonatomic, strong) NSString *str;
 @end
@@ -142,7 +142,7 @@ GCD中有三种队列类型：
 
 算法题，我遇到的都不难，毕竟不是BAT那种公司，简单的就是直接要你写一个算法出来，稍微高级点的就是有一个背景，然后要你解决问题，其实就是和ACM题目一样的，不过就是没有那么复杂。我贴几段问的最多的算法，太难的题只能考自己的算法功底了。
 
-```
+```c
 二分查找 θ(logn)
 
 递归方法
@@ -179,7 +179,7 @@ int binarySearch2(int a[] , int low , int high , int findNum)
 }
 ```
 
-```
+```c
 冒泡排序   θ(n^2)
 void bubble_sort(int a[], int n)
 {

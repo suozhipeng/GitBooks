@@ -108,7 +108,7 @@ HTTP协议是客户端最常用到的协议了，HTTP连接使用的是“请求
 
 Request和Response的格式：
 
-```http
+```objectivec
 // 请求
 GET / HTTP/1.1
 
@@ -188,32 +188,31 @@ HTTP/1.1的默认模式使用带流水线的持久连接。这种情况下，HTT
 最经典的就是反转二叉树了：
 
 ```objectivec
-+ (BinaryTreeNode *)invertBinaryTree:(BinaryTreeNode *)rootNode {
-if (!rootNode) {  return nil; }
-if (!rootNode.leftNode && !rootNode.rightNode) {  return rootNode; }
-NSMutableArray *queueArray = [NSMutableArray array]; //数组当成队列
-[queueArray addObject:rootNode]; //压入根节点
-while (queueArray.count > 0) {
-BinaryTreeNode *node = [queueArray firstObject];
-[queueArray removeObjectAtIndex:0]; //弹出最前面的节点，仿照队列先进先出原则
-BinaryTreeNode *pLeft = node.leftNode;
-node.leftNode = node.rightNode;
-node.rightNode = pLeft;
 
-if (node.leftNode) {
-    [queueArray addObject:node.leftNode];
-}
-if (node.rightNode) {
-    [queueArray addObject:node.rightNode];
-}
-
-}
-
-return rootNode;
++(BinaryTreeNode *)invertBinaryTree:(BinaryTreeNode *)rootNode {
+    if (!rootNode) { return nil; }
+    if (!rootNode.leftNode && !rootNode.rightNode) { return rootNode; }
+    NSMutableArray *queueArray = [NSMutableArray array]; //数组当成队列
+    [queueArray addObject:rootNode]; //压入根节点
+    while (queueArray.count > 0) {
+        BinaryTreeNode *node = [queueArray firstObject];
+        [queueArray removeObjectAtIndex:0]; //弹出最前面的节点，仿照队列先进先出原则
+        BinaryTreeNode *pLeft = node.leftNode;
+        node.leftNode = node.rightNode;
+        node.rightNode = pLeft;
+        
+        if (node.leftNode) {
+            [queueArray addObject:node.leftNode];
+        }
+        if (node.rightNode) {
+            [queueArray addObject:node.rightNode];
+        }   
+    }
+    return rootNode;
 }
 ```
 
-IOS常用数据结构有NSArray、NSMutableArray、NSDictionary、NSMutableDictionary等，这些基础知识就不细说了。不过，单向链表和双向链表关于插入和查询的效率问题还是要了解一些的。单向链表存储结构的节点中只有一个指向直接后继的指针域，双向链表的节点中有两个指针域，其中一个指向直接后继，另一个指向直接前驱。
+iOS常用数据结构有NSArray、NSMutableArray、NSDictionary、NSMutableDictionary等，这些基础知识就不细说了。不过，单向链表和双向链表关于插入和查询的效率问题还是要了解一些的。单向链表存储结构的节点中只有一个指向直接后继的指针域，双向链表的节点中有两个指针域，其中一个指向直接后继，另一个指向直接前驱。
 
 单向链表增加删除节点简单，遍历时候不会死循环（双向也不会死循环，循环链表忘了进行控制的话很容易进入死循环）。缺点是只能从头到尾遍历。只能找到后继，无法找到前驱，也就是只能前进。
 
