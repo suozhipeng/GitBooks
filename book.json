@@ -5,7 +5,12 @@
                 "-fontsettings",
                 "ace",
                 "atoc"
-                ]
-
+                ];
+   "pluginsConfig": {
+		"atoc": {
+			"addClass": true,
+			"className": "atoc"
+		}
+	}
 
 }
