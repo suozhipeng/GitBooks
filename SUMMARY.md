@@ -26,7 +26,6 @@
   * [iOS-死锁](ios/iossi-suo.md)
   * [iOS 零碎点](ios/ios-ling-sui-dian.md)
   * [iOS技能图谱](ios/iosji-neng-tu-pu.md)
-  * [iOS-算法目录合集](ios/iossuan-fa-mu-lu-he-ji.md)
   * [iOS-Data缓存](ios/iosdatacache.md)
 * [Interview](interview/interview.md)
   * [Interface-面试Leader](interview/interfacexiang-guan.md)
