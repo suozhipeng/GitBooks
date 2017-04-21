@@ -6,6 +6,7 @@
   * [React Native回调函数](rn/chapter1.md)
   * [RN 零碎点](rn/rn-ling-sui-dian.md)
 * [iOS原理解析](ios/yuan-ma-jie-xi.md)
+  * [iOS-基础总结](ios/skill-base.md)
   * [iOS-目录技能](ios/skill-list.md)
   * [iOS-视图生命周期](ios/iosshi-tu-sheng-ming-zhou-qi.md)
   * [iOS-OC内存管理](ios/ios-ocneicun.md)
