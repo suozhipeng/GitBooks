@@ -3,7 +3,7 @@
     "plugins": ["prism", 
                 "-highlight",
                 "-fontsettings",
-                "ace",
+                "ace"
                 ],
    
 
