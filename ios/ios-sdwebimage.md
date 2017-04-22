@@ -11,8 +11,7 @@
 SDWebImage是一个针对图片加载的插件库，提供了一个支持缓存的用于异步加载图片的下载工具，特别的为常用的UI元素：UIImageView,UIButton和MKAnnotationView提供了Category类别扩展，可以作为一个很方便的工具。其中SDWebImagePrefetcher可以预先下载图片，方便后续使用.
 
 SDWebImage的Github地址为：[https://github.com/rs/SDWebImage](https://github.com/rs/SDWebImage)
-
-![](http://img.blog.csdn.net/20170124150746687?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY29yZG92YQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![](/assets/20170124150746687.png)
 
 > ### SDWebImage的几点特性 {#sdwebimage的几点特性}
 
