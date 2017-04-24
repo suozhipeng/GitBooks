@@ -1,5 +1,5 @@
 # 吴白的简书
-http://www.jianshu.com/u/211925b3ca7c
+简书链接：http://www.jianshu.com/u/211925b3ca7c
 目录链接：[http://www.jianshu.com/p/437428330df3](http://www.jianshu.com/p/437428330df3)
 
 ---
@@ -26,29 +26,42 @@ http://www.jianshu.com/u/211925b3ca7c
    > 允许不同类的对象对同一消息作出响应。 
    子类对象调用父类方法
 
-   1. OC的动态性 
+   1. OC的动态性 isa指针
    > **Runtime：运行时，重要的消息机制、发送消息**
 
    4.1 动态类型、动态绑定和动态加载
    > 必须到运行时(runtime)才会做一些事情。
-   **动态类型，就是id类型。**
+   **动态类型，就是id类型。 编译时、运行时、`objc_msgSend`** 
    **动态绑定(dynamic binding)需要用到@selector/SEL。**
-   **动态加载就是根据需求动态地加载资源，在运行时加载新类。**
+      >  > 动态加载就是根据需求动态地加载资源，在运行时加载新类。在运行时创建一个新类,只需要3步:
+1、为 class pair分配存储空间 ,使用 objc_allocateClassPair 函数
+2、增加需要的方法使用 class_addMethod 函数,增加实例变量用class_addIvar
+3、用objc_registerClassPair函数注册这个类,以便它能被别人使用。
+其实就是这么简单。
+
+   >   **动态加载就是根据需求动态地加载资源，在运行时加载新类。**
+   > > 在运行时偷换selector对应的方法实现，达到给方法挂钩的目的。每个类都有一个方法列表，存放着selector的名字和方法实现的映射关系。IMP类似函数指针，指向具体的Method实现。
+   * 用 method_exchangeImplementations 来交换2个方法中的IMP，
+   * 用 class_replaceMethod 来修改类，
+   * 用 method_setImplementation 来直接设置某个方法的IMP，归根结底，都是偷换了selector的IMP。
 
    4.2 Method Swizzling
 
    1. RunLoop
    > **让线程能随时处理事件但不退出的机制**
    **线程和 RunLoop 之间是一一对应的**
-   _ runloop作用
+    runloop作用
+    `[NSRunLoop currentRunLoop]`
     1.使程序一直运行接受用户输入;
    2.决定程序在何时应该处理哪些Event;
    3.调用解耦;
-   4.节省CPU时间。_
-   >- 主线程的runloop默认是启动的。
+   4.节省CPU时间。
+      5. Runloop同时也负责autorelease pool的创建和释放
+>- 主线程的runloop默认是启动的。
   > - Cocoa中的NSRunLoop类并不是线程安全的,
   > - 获取对应的CFRunLoopRef类，来达到线程安全的目的。 
   `- (CFRunLoopRef)getCFRunLoop;`
+  
   
    5.1 系统默认注册的5个Mode
 
@@ -82,27 +95,111 @@ http://www.jianshu.com/u/211925b3ca7c
    2.2 元类对象\(metaclass object\)
 
    2.3 实例对象和类的分析
+   > 程序里的所有实例对象(instace object)都是在运行时由Objective-C的运行时库生成的，
+   而这个类对象(class object)就是运行时库用来创建实例对象(instance object)的依据。
+   实例对象(instance object)的isa指针指向的类对象(class object)里面还有一个isa，类对象(class objec)的isa指向的依然是一个objc-class，它就是元类对象(metaclass object)。
 
 3. Category
 
    3.1 runtime对category的加载过程
+   > 
+   ```objectivec
+   struct _category_t {
+const char *name; // 类的名字
+struct _class_t *cls; // 要扩展的类对象，编译期间这个值是不会有的，在app被runtime加载时才会根据name对应到类对象
+const struct _method_list_t *instance_methods; // 实例方法
+const struct _method_list_t *class_methods; // 类方法
+const struct _protocol_list_t *protocols; // 这个category实现的protocol，比较不常用在category里面实现协议，但是确实支持的
+const struct _prop_list_t *properties; // 这个category所有的property，这也是category里面可以定义属性的原因，不过这个property不会@synthesize实例变量，一般有需求添加实例变量属性时会采用objc_setAssociatedObject和objc_getAssociatedObject方法绑定方法绑定，不过这种方法生成的与一个普通的实例变量完全是两码事。
+};
+```
 
    3.2 Extension
 
 4. iOS视图生命周期
 5. NSNotification效率问题
 > 
+NSNotificationCenter在转发NSNotification消息的时候，在哪个线程中post，就在哪个线程中转发。换句话说，不管你的observer是在哪个线程，observer的回调方法执行线程都和post的线程保持一致，同时**NSNotification是线程阻塞的**，即走完通知后才继续往下执行。如果想让post的线程和转发的线程不同，可以通过NSNotification重定向技术实现
 **重定向的实现思路**
+> 自定义一个通知队列，让这个队列去维护那些我们需要重定向的Notification。当Notification来了时，根据需要将这个Notification存储到我们的队列中，并发送一个信号(signal)来告诉这个线程需要处理一个Notification。指定的线程在收到信号后，将Notification从队列中移除，并进行处理。
+如此，在全局dispatch队列中抛出的Notification就在主线程中接收到了。
 
-6. KVO，NSNotification，delegate及block区别
+```objectivec
+@interface ViewController ()
+@property (nonatomic) NSMutableArray    * notifications;         // 通知队列
+
+@property (nonatomic) NSThread          * notificationThread;    // 期望线程
+
+@property (nonatomic) NSLock            * notificationLock;      // 用于对通知队列加锁的锁对象，避免线程冲突
+
+@property (nonatomic) NSMachPort        * notificationPort;      // 用于向期望线程发送信号的通信端口
+@end
+
+@implementation ViewController
+- (void)viewDidLoad {
+[super viewDidLoad];
+
+NSLog(@"current thread = %@", [NSThread currentThread]);
+
+// 初始化
+self.notifications = [[NSMutableArray alloc] init];
+self.notificationLock = [[NSLock alloc] init];
+self.notificationThread = [NSThread currentThread];
+self.notificationPort = [[NSMachPort alloc] init];
+self.notificationPort.delegate = self;
+// 往当前线程的run loop添加端口源。当Mach消息到达而接收线程的run loop没有运行时，则内核会保存这条消息，直到下一次进入run loop
+[[NSRunLoop currentRunLoop] addPort:self.notificationPort forMode:(__bridge NSString *)kCFRunLoopCommonModes];
+[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processNotification:) name:@"TestNotification" object:nil];
+dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+[[NSNotificationCenter defaultCenter] postNotificationName:@"TestNotification" object:@"" userInfo:nil];
+});
+}
+- (void)handleMachMessage:(void *)msg {
+[self.notificationLock lock];
+while ([self.notifications count]) {
+    NSNotification *notification = [self.notifications objectAtIndex:0];
+    [self.notifications removeObjectAtIndex:0];
+    [self.notificationLock unlock];
+    [self processNotification:notification];
+    [self.notificationLock lock];
+};
+[self.notificationLock unlock];
+}
+- (void)processNotification:(NSNotification *)notification {
+if ([NSThread currentThread] != _notificationThread) {
+    // Forward the notification to the correct thread.
+    [self.notificationLock lock];
+    [self.notifications addObject:notification];
+    [self.notificationLock unlock];
+    [self.notificationPort sendBeforeDate:[NSDate date]
+                               components:nil
+                                     from:nil
+                                 reserved:0];
+}else {
+    // Process the notification here;
+    NSLog(@"current thread = %@", [NSThread currentThread]);
+    NSLog(@"process notification");
+}
+}
+``` 
+6.KVO，NSNotification，delegate及block区别
 > 
 **NSNotification是通知，也是一对多的使用场景。**
 **block是delegate的另一种形式，是函数式编程的一种形式。**
 **delegate是一对一关系。**
 **KVO可以监测一个值的变化，比如View的高,
    KVO是一对多的关系，一个值的变化会通知所有的观察者。**
-7. \_\_weak
-8. nil、Nil、NULL、NSNull
+
+7.\_\_weak
+> 
+当一个 `__weak` 类型的指针指向的对象被释放时，该指针会自动被置成nil，因此`__weak`关键字修饰的指针又被称为智能指针。
+objc_storeWeak函数会把第二个参数的对象的地址作为key，并将第一个参数（`__weak`关键字修饰的指针的地址）作为值，注册到weak表中。如果第二个参数为0（说明对应的对象被释放了），则将weak表中将整个key-value键值对删除，这就是**`__weak`关键字的核心思想！**
+
+weak表和引用计数表类似，都是通过hash表实现的。如果使用weak表，将被释放的对象地址作为key去检索，就能很高效的获取对应的指向该对象的类型为`__weak`的指针变量的地址。一个对象可能有多个`__weak`指针指向，因此一个对象地址key可能对应多个值。
+
+在调用对象的release方法时，会在其中一步调用objc_clear_deallocating函数，该函数会执行以下操作：以当前对象的地址作为key，从weak表中获取对应的值，即指向该对象的`__weak`类型的指针变量；将取到的所有指针变量的值赋值为nil；从weak表中删除该key对应的整条记录。如果大量使用附有`__weak`修饰符的变量会消耗响应的CPU资源，因此应该尽量少使用`__weak`修饰符。
+
+8.nil、Nil、NULL、NSNull
 > 
 1.NULL就知道这是个C指针，
 2.nil就知道这是个Objective-C对象，
@@ -117,7 +214,7 @@ if(![location isEqual:[NSNull null]]){
 }
 ```
 
-9. 图像处理中的UI、CG和CI
+9.图像处理中的UI、CG和CI
 
    9.1 UIImage、CGImage和CGImageRef
 
@@ -127,10 +224,9 @@ if(![location isEqual:[NSNull null]]){
 
    9.4 判断两个颜色是否相等
 
-10. 时间复杂度和空间复杂度
-
+10.时间复杂度和空间复杂度
+> 
     10.1 **求时间复杂度**
-
     10.2** 空间复杂度**
 
 ## [第三章 iOS视图成像理论及优化](http://www.jianshu.com/p/d3685b4977aa)
