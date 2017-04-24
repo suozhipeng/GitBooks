@@ -1,8 +1,10 @@
 # **iOS异步图片加载优化与常用开源库分析**
-原文链接:http://www.jianshu.com/p/3b2c95e1404f
+
+原文链接:[http://www.jianshu.com/p/3b2c95e1404f](http://www.jianshu.com/p/3b2c95e1404f)  
 SDWebImage分析
-> 链接1：http://blog.csdn.net/cordova/article/details/54708029
-链接2：http://www.jianshu.com/p/f14b17467dd9#
+
+> 链接1：[http://blog.csdn.net/cordova/article/details/54708029](http://blog.csdn.net/cordova/article/details/54708029)  
+> 链接2：[http://www.jianshu.com/p/f14b17467dd9\#](http://www.jianshu.com/p/f14b17467dd9#)
 
 ---
 
@@ -24,7 +26,7 @@ SDWebImage分析
 
 > 以上4，5，6，7，8步是在`UIImageView`的`setImage`时进行的，所以默认在主线程进行\(iOS UI操作必须在主线程执行\)。
 
-**SDWebImage加载流程**
+**SDWebImage加载流程**  
 ![SDWebImage加载流程](/assets/sdWebImage原理.png)
 
 # 2. 一些优化思路：
@@ -54,14 +56,13 @@ imageView对象会关联一个下载列表（列表是给AnimationImages用的�
 
 同时，SDWebImage管理了一个全局下载队列（在DownloadManager中）,并发量设置为6.也就是说如果可见cell的数目是大于6的，就会有部分下载队列处于等待状态。而且，在添加下载任务到全局的下载队列中去的时候，SDWebImage默认是采取`LIFO`策略的，具体是在添加下载任务的时候，将上次添加的下载任务添加依赖为新添加的下载任务。
 
-```objectivec 
+```objectivec
         [wself.downloadQueue addOperation:operation];
         if (wself.executionOrder == SDWebImageDownloaderLIFOExecutionOrder) {
             // Emulate LIFO execution order by systematically adding new operations as last operation's dependency
             [wself.lastAddedOperation addDependency:operation];
             wself.lastAddedOperation = operation;
         }
-
 ```
 
 &lt;!--所以在运行SDWebImage的demo的时候，可以看到，如果快速滑下去，然后又滑回来的话，图片是过了一会才显示出来，这是因为快速滑动的时候，旧数据源的下载任务被取消掉了。 --&gt;
@@ -82,7 +83,7 @@ imageView对象和图片的url相关联，在滑动时，不取消旧的下载�
 
 ## 2.2 关于图片解压缩:
 
-&lt;!--\#\#\# 图片来源 针对app自带的图片，xcode在编译的时候会对png图片进行\[优化\]\(http://outofmemory.cn/wr/?u=http%3A%2F%2Fartori.us%2Foptimized-png-in-xcode%2F\)（据说是通过\[pngcrush\]\(http://pmt.sourceforge.net/pngcrush/\)这个开源的工具来优化），这样在显示的时候就会有一些比较好的体验。 对于从internet上面下载的图片，多数情况下，是需要做解压缩后，才能渲染到屏幕上的。 --&gt;
+&lt;!--\#\#\# 图片来源 针对app自带的图片，xcode在编译的时候会对png图片进行\[优化\]\([http://outofmemory.cn/wr/?u=http%3A%2F%2Fartori.us%2Foptimized-png-in-xcode%2F\)（据说是通过\[pngcrush\]\(http://pmt.sourceforge.net/pngcrush/\)这个开源的工具来优化），这样在显示的时候就会有一些比较好的体验。](http://outofmemory.cn/wr/?u=http%3A%2F%2Fartori.us%2Foptimized-png-in-xcode%2F%29（据说是通过[pngcrush]%28http://pmt.sourceforge.net/pngcrush/%29这个开源的工具来优化），这样在显示的时候就会有一些比较好的体验。) 对于从internet上面下载的图片，多数情况下，是需要做解压缩后，才能渲染到屏幕上的。 --&gt;
 
 ### 通用的解压缩方案
 
@@ -96,7 +97,6 @@ imageView对象和图片的url相关联，在滑动时，不取消旧的下载�
 下面的代码是`SDWebImage`的解决方案:
 
 ```objectivec
- 
 + (UIImage *)decodedImageWithImage:(UIImage *)image {
     if (image.images) {
         // Do not decode animated images
@@ -167,9 +167,6 @@ SDWebImage与AFNetworking都没有对第7点做优化，FastImageCache相对与�
 
 ![](http://luoyibu.qiniudn.com/VZB3Qn.png)
 
-  
-
-
 从代码上来看，主要是在创建上图解码的过程中，`CGBitmapContextCreate`函数的`bytesPerRow`参数必须传**64的倍数**。
 
 比较各个开源框架的代码，可以看到SDWebImage与AFNetworking的该参数都传的是0，即让系统自动来计算该值（那为何系统自动计算的时候不让图片数据字节就字节对齐呢？）。
@@ -189,9 +186,7 @@ SDWebImage与AFNetworking都没有对第7点做优化，FastImageCache相对与�
 
 对于比较通用的缩放，或者圆角等功能，可以集成到控件本身。不过，提供一个接口出来，让使用者能够有机会对下载下来的图片做一些其他的特殊处理是有必要的。
 
-
-``` objectivec 
-
+```objectivec
 /** SDWebImage
  * Allows to transform the image immediately after it has been downloaded and just before to cache it on disk and memory.
  * NOTE: This method is called from a global queue in order to not to block the main thread.
@@ -203,10 +198,7 @@ SDWebImage与AFNetworking都没有对第7点做优化，FastImageCache相对与�
  * @return The transformed image object.
  */
 - (UIImage *)imageManager:(SDWebImageManager *)imageManager transformDownloadedImage:(UIImage *)image withURL:(NSURL *)imageURL;
-
 ```
-
-
 
 ## 2.6 其他（诸如图片预下载，gif支持等等,下载进度条）
 
@@ -241,5 +233,6 @@ SDWebImage与AFNetworking都没有对第7点做优化，FastImageCache相对与�
 转载请注明出处哦，我的博客:[luoyibu](http://www.luoyibu.com/)
 
 ---
+
 
 

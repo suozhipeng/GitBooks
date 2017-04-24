@@ -9,13 +9,14 @@ RunTime简称运行时。就是系统在运行的时候的一些机制，其中�
 
 以下面的代码为例：
 
-```
+```objectivec
 [obj makeText];
 ```
 
 其中obj是一个对象，makeText是一个函数名称。对于这样一个简单的调用。在编译时RunTime会将上述代码转化成
 
-```
+```objectivec
+
 objc_msgSend(obj,@selector(makeText));
 ```
 
@@ -45,7 +46,8 @@ Objective-C 的 Runtime 是一个运行时库（Runtime Library），它是一�
   
 **队列组的方式**
 
-```
+```objectivec
+
 - (void) methodone{
 dispatch_group_t group = dispatch_group_create();
 
@@ -69,35 +71,37 @@ dispatch_group_notify(group, dispatch_get_main_queue(), ^{
     dispatch_group_async(group1, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSLog(@"%d",5);
     });
-
 });
-
 }
 ```
 
 串行队列：队列中的任务只会顺序执行
 
-```
+```objectivec
+
 dispatch_queue_t q = dispatch_queue_create(“....”, dispatch_queue_serial);
 ```
 
 并行队列： 队列中的任务通常会并发执行。 　　　　　　　
 
-```
+```objectivec
+
 dispatch_queue_t q = dispatch_queue_create("......", dispatch_queue_concurrent);
 
 ```
 
 全局队列：是系统开发的，直接拿过来用就可以；与并行队列类似，但调试时，无法确认操作所在队列　。
 
-```
+```objectivec
+
 dispatch_queue_t q = dispatch_get_global_queue(dispatch_queue_priority_default, 0);
 
 ```
 
 主队列：每一个应用开发程序对应唯一一个主队列，直接get即可；在多线程开发中，使用主队列更新UI。
 
-```
+```objectivec
+
 dispatch_queue_t q = dispatch_get_main_queue();
 ```
 
@@ -144,7 +148,7 @@ KVO一般的使用场景是数据，需求是数据变化，比如股票价格�
 
 计时器只能调用实例方法，但是可以在这个实例方法里面调用静态方法。
 
-使用计时器需要注意，计时器一定要加入RunLoop中，并且选好model才能运行。scheduledTimerWithTimeInterval方法创建一个计时器并加入到RunLoop中所以可以直接使用。
+使用计时器需要注意，**计时器一定要加入RunLoop中，并且选好model才能运行**。scheduledTimerWithTimeInterval方法创建一个计时器并加入到RunLoop中所以可以直接使用。
 
 如果计时器的repeats选择YES说明这个计时器会重复执行，一定要在合适的时机调用计时器的invalid。不能在dealloc中调用，因为一旦设置为repeats 为yes，计时器会强持有self，导致dealloc永远不会被调用，这个类就永远无法被释放。比如可以在viewDidDisappear中调用，这样当类需要被回收的时候就可以正常进入dealloc中了。
 

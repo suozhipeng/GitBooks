@@ -30,7 +30,8 @@ applicationWillTerminate:
 **应用逻辑的Bug**  
 大多数闪退崩溃日志的产生都是因为应用中的Bug，这种Bug的错误种类有很多，比如
 
-```
+```objectivec
+
  SEGV：（Segmentation Violation，段违例），无效内存地址，比如空指针，未初始化指针，栈溢出等；
   SIGABRT：收到Abort信号，可能自身调用abort()或者收到外部发送过来的信号；
   SIGBUS：总线错误。与SIGSEGV不同的是，SIGSEGV访问的是无效地址（比如虚存映射不到物理内存），而SIGBUS访问的是有效地址，但总线访问异常（比如地址对齐问题）；
@@ -137,7 +138,8 @@ OSX/iOS 系统中，提供了两个这样的对象：NSRunLoop 和 CFRunLoopRef�
 
 主线程的run loop默认是启动的。iOS的应用程序里面，程序启动后会有一个如下的main\(\) 函数：
 
-```
+```objectivec
+
  int main(int argc, char *argv[])
  {
         @autoreleasepool {
@@ -150,7 +152,8 @@ OSX/iOS 系统中，提供了两个这样的对象：NSRunLoop 和 CFRunLoopRef�
 
 对其它线程来说，run loop默认是没有启动的，如果你需要更多的线程交互则可以手动配置和启动，如果线程只是去执行一个长时间的已确定的任务则不需要。在任何一个Cocoa程序的线程中，都可以通过：
 
-```
+```objectivec
+
 NSRunLoop   *runloop = [NSRunLoop currentRunLoop];
 
 ```
@@ -179,7 +182,8 @@ Cocoa中使用任何performSelector…的方法
 1. Cocoa中的NSRunLoop类并不是线程安全的  
    我们不能再一个线程中去操作另外一个线程的run loop对象，那很可能会造成意想不到的后果。不过幸运的是CoreFundation中的不透明类CFRunLoopRef是线程安全的，而且两种类型的run loop完全可以混合使用。Cocoa中的NSRunLoop类可以通过实例方法：
 
-   ```
+   ```objectivec
+
     - (CFRunLoopRef)getCFRunLoop;
 
    ```
@@ -189,7 +193,8 @@ Cocoa中使用任何performSelector…的方法
 2. Run loop的管理并不完全是自动的。  
    我们仍必须设计线程代码以在适当的时候启动run loop并正确响应输入事件，当然前提是线程中需要用到run loop。而且，我们还需要使用while/for语句来驱动run loop能够循环运行，下面的代码就成功驱动了一个run loop：
 
-   ```
+   ```objectivec
+
    BOOL isRunning = NO;
    do {
         isRunning = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDatedistantFuture]];
@@ -242,7 +247,8 @@ iOS有四种多线程编程的技术，分别是：NSThread，Cocoa NSOperation�
 GCD 确实好用 ，很强大，相比NSOpretion 无法提供 取消任务的功能。  
 如此强大的工具用不好可能会出现线程死锁。 如下代码：
 
-```
+```objectivec
+
 - (void)viewDidLoad{ 
 [super viewDidLoad];     
 NSLog(@"=================4");
@@ -269,7 +275,8 @@ dispatch\_sync\(queue,block\) sync 同步队列，dispatch\_sync
 viewDidLoad 在主线程中， 及在dispatch\_get\_main\_queue\(\) 中，执行到sync 时 向  
 dispatch\_get\_main\_queue\(\)插入 同步 threed。sync 会等到 后面block 执行完成才返回， sync 又再 dispatch\_get\_main\_queue\(\) 队列中，它是串行队列，sync 是后加入的，前一个是主线程，所以 sync 想执行 block 必须等待主线程执行完成，主线程等待 sync 返回，去执行后续内容。照成死锁，sync 等待mainThread 执行完成， mianThread 等待sync 函数返回。下面例子：
 
-```
+```objectivec
+
 - (void)viewDidLoad{ 
 [super viewDidLoad]; 
 dispatch_async(dispatch_get_global_queue(0, 0), ^{ 
@@ -291,7 +298,8 @@ NSLog(@"=================3"); });
 
 2.应尽量避免在 where 子句中对字段进行 null 值判断，否则将导致引擎放弃使用索引而进行全表扫描，如：
 
-```
+```objectivec
+
  select id from t where num is null
 
 ```
@@ -304,7 +312,8 @@ NSLog(@"=================3"); });
 
 可以在num上设置默认值0，确保表中num列没有null值，然后这样查询：
 
-```
+```objectivec
+
 select id from t where num=0
 ```
 
@@ -312,49 +321,56 @@ select id from t where num=0
 
 4.应尽量避免在 where 子句中使用 or 来连接条件，如果一个字段有索引，一个字段没有索引，将导致引擎放弃使用索引而进行全表扫描，如：
 
-```
+```objectivec
+
  select id from t where num=10 or Name='admin'
 
 ```
 
 可以这样查询：
 
-```
+```objectivec
+
  select id from t where num=10 union all select id from t where Name='admin'
 
 ```
 
 5.in 和 not in 也要慎用，否则会导致全表扫描，如：
 
-```
+```objectivec
+
 select id from t where num in (1,2,3)
 
 ```
 
 对于连续的数值，能用 between 就不要用 in 了：
 
-```
+```objectivec
+
  select id from t where num between 1 and 3
 
 ```
 
 很多时候用 exists 代替 in 是一个好的选择：
 
-```
+```objectivec
+
  select num from a where num in (select num from b)
 
 ```
 
 用下面的语句替换：
 
-```
+```objectivec
+
  select num from a where exists (select 1 from b where num=a.num)
 
 ```
 
 6.下面的查询也将导致全表扫描：
 
-```
+```objectivec
+
 select id from t where name like ‘%abc%’
 
 ```
@@ -363,42 +379,48 @@ select id from t where name like ‘%abc%’
 
 7.如果在 where 子句中使用参数，也会导致全表扫描。因为SQL只有在运行时才会解析局部变量，但优化程序不能将访问计划的选择推迟到运行时；它必须在编译时进行选择。然 而，如果在编译时建立访问计划，变量的值还是未知的，因而无法作为索引选择的输入项。如下面语句将进行全表扫描：
 
-```
+```objectivec
+
 select id from t where num=@num
 
 ```
 
 可以改为强制查询使用索引：
 
-```
+```objectivec
+
 select id from t with (index(索引名)) where num=@num
 
 ```
 
 应尽量避免在 where 子句中对字段进行表达式操作，这将导致引擎放弃使用索引而进行全表扫描。如：
 
-```
+```objectivec
+
 select id from t where num/2=100
 
 ```
 
 应改为:
 
-```
+```objectivec
+
 select id from t where num=100*2
 
 ```
 
 9.应尽量避免在where子句中对字段进行函数操作，这将导致引擎放弃使用索引而进行全表扫描。如：
 
-```
+```objectivec
+
  select id from t where substring(name,1,3)=’abc’ -–name以abc开头的id
  select id from t where datediff(day,createdate,’2015-11-30′)=0 -–‘2015-11-30’ --生成的id
 ```
 
 应改为:
 
-```
+```objectivec
+
 select id from t where name like'abc%' 
 select id from t where createdate>='2005-11-30' and createdate<'2005-12-1'
 
@@ -410,14 +432,16 @@ select id from t where createdate>='2005-11-30' and createdate<'2005-12-1'
 
 12.不要写一些没有意义的查询，如需要生成一个空表结构：
 
-```
+```objectivec
+
 select col1,col2 into #t from t where1=0
 
 ```
 
 这类代码不会返回任何结果集，但是会消耗系统资源的，应改成这样：
 
-```
+```objectivec
+
 create table #t(…)
 
 ```
@@ -438,7 +462,8 @@ create table #t(…)
 
 20.任何地方都不要使用
 
-```
+```objectivec
+
   select * from t
 
 ```
@@ -475,7 +500,8 @@ Apache 会有很多的子进程或线程。所以，其工作起来相当有效�
 
 所以，如果你有一个大的处理，你一定把其拆分，使用 LIMIT oracle\(rownum\),sqlserver\(top\)条件是一个好的方法。下面是一个mysql示例：
 
-```
+```objectivec
+
 while(1){//每次只做1000条
 mysql_query(“delete from logs where log_date <= ’2015-11-01’ limit 1000”);
 if(mysql_affected_rows() == 0){//删除完成，退出！break；
