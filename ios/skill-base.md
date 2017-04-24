@@ -8,7 +8,7 @@
 
 * 首先二者都是多线程相关的概念，当然在使用中也是根据不同情境进行不同的选择；
 * GCD是将任务添加到队列中（串行/并发/主队列），并且制定任务执行的函数（同步/异步），其性能最好，底层是C语言的API，也更轻量级。iOS4.0以后推出的，针对多核处理器的并发技术，只能设置某一个队列的优先级，其高级功能有一次性执行dispatch\_once，延迟操作dispatch\_after，调度组等等；
-* NSOperation把操作（异步）添加到队列中（全局的并发队列），是OC框架，更加面向对象，是对GCD的封装，iOS2.0推出，苹果推出GCD之后，对NSOperation的底层全部重写，可以随时取消已经设定准备要执行的任务，已经执行的除外，可以设置队列中每一个操作的优先级，其高级功能可以设置最大操作并发数，继续/暂停/全部取消，可以快队列设置操作的依赖关系，通过KVO监听 NSOperation 对象的属性，如 isCancelled、isFinished；对象可重用。
+* NSOperation把操作（异步）添加到队列中（全局的并发队列），是OC框架，更加面向对象，是对GCD的封装，iOS2.0推出，苹果推出GCD之后，对NSOperation的底层全部重写，可以随时取消已经设定准备要执行的任务，已经执行的除外，可以设置队列中每一个操作的优先级，其高级功能**可以设置最大操作并发数，继续/暂停/全部取消，可以快队列设置操作的依赖关系，通过KVO监听 NSOperation 对象的属性，如 isCancelled、isFinished；对象可重用******。
 
 #### 1.2 谈谈多线程的应用
 
@@ -26,8 +26,8 @@
 
 #### 3. 网络图片处理问题怎么解决图片重复下载问题？（SDWebImage大概实现原理）
 
-* 这个就需要用到字典，以图片的下载地址url为key，下载操作为value，所有的图片大概分成三类：已经下载好的，正在下载的和将要下载的；
-* 当一张图片将要进行下载操作的时候，先判断缓存中是否有相同的图片，如果有的话就返回，没有的话就根据url的md5加密值去沙盒中找，有的话就拿出来用，没有的话再去以图片的url为key去字典中找有没有正在进行的任务，最后去判断等待的下载操作任务里面的字典有无相同key，如果没有，就自己开启任务，记录一下，文件保存的名称是url的md5值
+* 这个就需要用到字典，以图片的下载地址url为key，下载操作为value，所有的图片大概分成三类：**已经下载好的，正在下载的和将要下载的**；
+* 当一张图片将要进行下载操作的时候，--> 先判断缓存中是否有相同的图片，-->如果有的话就返回，-->没有的话就根据url的md5加密值去沙盒中找，--> 有的话就拿出来用， --> 没有的话再去以图片的url为key去字典中找有没有正在进行的任务，--> 最后去判断等待的下载操作任务里面的字典有无相同key， --> 如果没有，就自己开启任务，记录一下，文件保存的名称是url的md5值
 * 这里建立了两个字典 :  
   1.iconCache:保存缓存的图片  
   2.blockOperation 用来保存下载任务  
@@ -41,13 +41,13 @@
 #### 4. 多线程安全的几种解决方法？
 
 * 1&gt;只有在主线程刷新访问UI
-* 2&gt; 如果要防止资源抢夺，需要用synchronize进行加锁保护
-* 3&gt;如果是异步操作要保证线程安全等问题，尽量使用GCD（有些函数默认就是安全的）
+* 2&gt; 如果要防止资源抢夺，需要用**synchronize**进行加锁保护
+* 3&gt;如果是异步操作要保证线程安全等问题，尽量使用**GCD**（有些函数默认就是安全的）
 * 4&gt;单例为什么用static dispatch\_once?使用dispatch\_once可以简化代码并且彻底保证线程安全，开发者无需担心加锁或同步。此外，dispatch\_once更高效，它没有使用重量级的同步机制，若是那样做的话，每次运行代码前都要获取锁。
 
 #### 5. 原子属性
 
-* 原子属性采用的是"多读单写"机制的多线程策略；"多读单写"缩小了锁范围,比互斥锁的性能好
+* 原子属性采用的是"**多读单写**"机制的多线程策略；"多读单写"缩小了锁范围,比互斥锁的性能好
 * 规定只在主线程更新UI,就是因为如果在多线程中更新,就需要给UI对象加锁,防止资源抢占写入错误,但是这样会降低UI交互的性能,所以ios设计让所有UI对象都是非线程安全的\(不加锁\)
 
 #### 6. 代理的作用、block
@@ -73,7 +73,7 @@
 
   * 在程序运行过程中，动态创建一个类\(比如KVO底层实现:检测isa指针，发现是新建了一个类，当然Xcode7.0以前的版本才可以监听到isa指针\)
   * 遍历一个类的所有成员变量、方法，访问私有变量（先通过runtime的class\_getInstanceVariable获取成员变量，再通过class\_getIvar获取它的值）
-  * 在程序运行过程中，动态为某个类添加属性\方法，修改属性值\方法，比如产品经理需要跟踪记录APP中按钮的点击次数和频率等数据，可以通过集成按钮或者类别实现，但是带来的问题比如别人不一定去实例化你写的子类，或者其他类别也实现了点击方法导致不确定会调用哪一个，runtime可以这样解决：在按钮的分类里面，重写load方法，利用dispatch\_once保证只执行一次，新建监控按钮点击的方法，先用class\_addMethod方法，判断其返回的bool值，如果添加成功，就用class\_replaceMethod将原来的方法移除，如果添加失败，就用method\_exchangeImplementations方法进行替换
+  * 在程序运行过程中，动态为某个类添加属性\方法，修改属性值\方法，比如产品经理需要**跟踪记录APP中按钮的点击次数和频率等数据**，可以通过集成按钮或者类别实现，但是带来的问题比如别人不一定去实例化你写的子类，或者其他类别也实现了点击方法导致不确定会调用哪一个，**runtime可以这样解决**：在按钮的分类里面，重写load方法，利用dispatch\_once保证只执行一次，新建监控按钮点击的方法，先用class\_addMethod方法，判断其返回的bool值，如果添加成功，就用class\_replaceMethod将原来的方法移除，如果添加失败，就用method\_exchangeImplementations方法进行替换
   * 拦截并替换方法，比如由于某种原因，我们要改变这个方法的实现，但是又不能动它的源码（比如一些开源库出现问题的时候，这时候runtime就可以出场了）--&gt;
     先增加一个tool类，然后写一个我们自己实现的方法-change，通过runtime的class\_getInstanceMethod获取两个方法，在用class\_replaceMethod方法进行替换。防止数组越界的方法：数组越界的时候报错的方法是add\_object，做一个逻辑判断，越界的时候通过class\_replaceMethod交换掉add\_object（相当于重写了这个方法）
 
@@ -141,7 +141,7 @@
   **block**  
   weak \_\_typeof\(\_currentModel\) weakModel = \_currentModel;
 
-* 常见的数据持久化有哪些
+### 12 常见的数据持久化有哪些
 
 * 偏好设置（preference），利用NSUserDefaults
 
@@ -226,7 +226,7 @@
 * 从存储类型来看，属性列表只能存放固定的七种类型（可在plist文件中看到），归档对存储类型无限制
 
   
-13. KVC 和 KVO
+### 13. KVC 和 KVO
 
 * KVC\(key-value-coding键值编码，跟多情况下会简化程序代码\)的常见用法：
   * 给私有变量（该变量不对外开放）赋值：\[Person setValue: @"19" ForKeyPath:@"age"\]
@@ -249,8 +249,8 @@
   do something....
 }
 ```
-
-* 当一个类的属性被观察的时候，系统会通过runtime动态的创建一个该类的派生类，并且会在这个类中重写基类被观察的属性的setter方法，而且系统将这个类的isa指针指向了派生类（NSNotifying\_类名），从而实现了给监听的属性赋值时调用的是派生类的setter方法。重写的setter方法会在调用原setter方法前后，通知观察对象值得改变。
+**KVO实现原理**
+> 当一个类的属性被观察的时候，系统会通过runtime动态创建一个该类的派生类，并且会在这个类中重写基类中被观察的属性的setter方法，而且系统将这个类的isa指针指向了派生类（NSNotifying\_类名），从而实现了给监听的属性赋值时调用的是派生类的setter方法。重写的setter方法会在调用原setter方法后，通知观察对象值得改变。
 
 #### 14. @synthesize和@dynamic区别是什么
 
@@ -258,9 +258,13 @@
 * @synthesize 语义是如果没有手动实现setter和getter方法，那么编译器会自动帮你加上这两个方法
 * @dynamic告诉编译器，属性的setter和getter由用户自己实现，不自动生成（readOnly只实现getter即可），但是如果没有自己实现，编译的时候不会报错，运行的时候就会报错，这就是所谓的动态绑定
 
-#### 15. 谈谈时间响应链的一般顺序
-
-* 一般来说，第一响应者是个视图对象或者其他子类对象，当其被触摸以后事件便交由他处理，如果他不处理，时间就会被传递给它的视图控制器对象viewController（如果存在），然后是它的父视图对象（superView）（如果存在），依次类推，直到顶层视图，接着沿着顶层视图（topView）到窗口（UIWindow对象）再到程序（Application对象）。如果整个过程都没有响应这个事件，该事件就会被抛弃。一般情况下，在响应链中只要有对象响应那个处理事件，事件就会停止传递
+#### 15. 谈谈事件响应链的一般顺序
+> 
+* 一般来说，第一响应者是个视图对象或者其他子类对象，当其被触摸以后事件便交由他处理，
+* 如果他不处理，时间就会被传递给它的视图控制器对象viewController（如果存在），
+* 然后是它的父视图对象（superView）（如果存在），依次类推，直到顶层视图，
+* 接着沿着顶层视图（topView）到窗口（UIWindow对象）再到程序（Application对象）。
+* 如果整个过程都没有响应这个事件，该事件就会被抛弃。一般情况下，在响应链中只要有对象响应那个处理事件，事件就会停止传递
 
 #### 16.1 post和get方式的区别
 
@@ -281,23 +285,23 @@
 * 什么情况下用POST：
 
   * 请求的结果具有持续性副作用，如数据库添加新的数据行
-  * 若使用get方法，则表单上手机的数据可能让URL过长
+  * 若使用get方法，则表单上输入的数据可能让URL过长
   * 要传送的数据不是采用7位的ASCII编码
 
 * 什么情况下用GET：
 
   * 请求是为了查找资源，HTML表单数据仅用来帮助搜索
   * 请求结果无持续副作用性的副作用
-  * 手机的数据及HTML表单内的输入字段名称的总长不超过1024个字符
+  * 输入的数据及HTML表单内的输入字段名称的总长不超过1024个字符
 
 #### 16.2 POST和PUT区别
 
-* POST请求的url表示处理该封闭实体的资源，该资源可能是个数据接收过程、某种协议的网关、或者接收注解的独立实体。
+* POST请求的url表示处理该封闭实体的资源，该资源可能是某个数据接收过程、某种协议的网关、或者接收注解的独立实体。
 * PUT请求中的url表示请求中封闭的实体-用户代理知道url的目标，并且服务器无法将请求应用到其他资源。如果服务器希望该请求应用到另一个url，就必须发送一个301响应；用户代理可通过自己的判断来决定是否转发该请求。
 
 * POST是用来提交数据的。提交的数据放在HTTP请求的正文里，目的在于提交数据并用于服务器端的存储，而不允许用户过多的更改相应数据（主要是相对于在url 修改要麻烦很多\)。
 
-* PUT操作是幂等的。所谓幂等是指不管进行多少次操作，结果都一样。比如我用PUT修改一篇文章，然后在做同样的操作，每次操作后的结果并没有不同
+* PUT操作是幂等的。所谓**幂等**是指不管进行多少次操作，结果都一样。比如我用PUT修改一篇文章，然后在做同样的操作，每次操作后的结果并没有不同
 * POST操作既不是安全的，也不是幂等的，比如常见的POST重复加载问题：当我们多次发出同样的POST请求后，其结果是创建出了若干的资源。
 * 安全和幂等的意义在于：当操作没有达到预期的目标时，我们可以不停的重试，而不会对资源产生副作用。从这个意义上说，POST操作往往是有害的，但很多时候我们还是不得不使用它。
 
@@ -309,11 +313,15 @@
 >
 > 浅复制：指针复制。
 
-* 非集合类对immutable对象进行copy操作，是指针复制，mutableCopy操作时内容复制
+* 非集合类对mutable对象进行copy操作，是指针复制，mutableCopy操作时内容复制
 * 非集合类对mutable对象进行copy和mutableCopy都是内容复制。
-* 在集合类对象中，对immutable对象进行copy，是指针复制，mutableCopy是内容复制
+* 在集合类对象中，对mmutable对象进行copy，是指针复制，mutableCopy是内容复制
 * 在集合类对象中，对mutable对象进行copy和mutableCopy都是内容复制。但是：集合对象的内容复制仅限于对象本身，对象元素仍然是指针复制。
-* NSString \*str = @"string"; str = @"newString"; 打印对象地址，发现是发生变化的，需要把@"newStirng"当做一个新的对象，将这段对象的内存地址赋值给str
+```objectivec 
+NSString *str = @"string"; 
+str = @"newString"; 
+```
+> 打印对象地址，发现是发生变化的，需要把@"newStirng"当做一个新的对象，将这段对象的内存地址赋值给str
 
 #### 18. 关于项目中动画的使用
 
@@ -370,11 +378,12 @@ var viewModel = ViewModel(model: Account)
 
 * Swift是一门更加现代化的语言，但是目前还在成长阶段，更新改动比较大，虽然说其底层思想不变，变的是API和接口，但是每次更新完Xcode看到自己的Swift项目还是有些淡淡的忧伤，而且目前Swift开发都要转成OC的runtime，包略大，因此题主认为成熟项目最好还是采用OC
 
-* 先记住一句话：OC底层面向对象，而Swift底层更加面向协议
+* 先记住一句话：**OC底层面向对象，而Swift底层更加面向协议**
 
 * 我们已经见识过Apple使用了大量协议，比如在tableView当中，我们可以通过协议来告诉Apple需要多少个表视图单元格，而不是每时每刻都要继承UITableViewController
 
-* 在这里以MVVM作为测试用例：比如现在需要建立一个类似设置界面的tableView，每个cell需要一个label和一个switch，自定义SwitchWithTextTableViewCell，在其内部建立一个configure方法中对label的title，titleFont，titleColor，switch的switchOn和switchColor等进行初始化，但这种方式非常累赘，比如添加一个副标题，就需要额外添加三个属性
+* 在这里以MVVM作为测试用例：
+> 比如现在需要建立一个类似设置界面的tableView，每个cell需要一个label和一个switch，自定义SwitchWithTextTableViewCell，在其内部建立一个configure方法中对label的title，titleFont，titleColor，switch的switchOn和switchColor等进行初始化，但这种方式非常累赘，比如添加一个副标题，就需要额外添加三个属性
 
 * 但是利用协议SwitchWithTextCellProtocol，让视图模型实现这个协议，然后在这里设置所有的属性
 
@@ -391,7 +400,7 @@ var viewModel = ViewModel(model: Account)
   }
   ```
 
-* 通过swift2.0重点饿协议扩展，就可以通过默认值来做一些处理了，如果对于大多数单元格来说，可以确定某一种颜色的话，就可以对其建立扩展，然后设置颜色即可，所有实现此协议的视图就没有必要再去设置这个颜色了
+* 通过swift2.0中的协议扩展，就可以通过默认值来做一些处理了，如果对于大多数单元格来说，可以确定某一种颜色的话，就可以对其建立扩展，然后设置颜色即可，所有实现此协议的视图就没有必要再去设置这个颜色了
 
 * 现在，我的configure方法里面只要实现此协议的值就可以了
 
@@ -435,7 +444,7 @@ cell.configure(withDelegate: MinionModeViewModel())
 return cell
 ```
 
-> 再把模型放在视图模型层级，一遍对其进行跟踪，再视图模型中传递这些信息，这样单元格就可以生成了
+> 再把模型放在视图模型层级，一边对其进行跟踪，在视图模型中传递这些信息，这样单元格就可以生成了
 
 * 但是在这个基础上，还可以再做进一步的深化，就是建立两个协议，一个作为实际编码的数据源，比如标题内容之类的实际数据，一个作为单元格委托，存储颜色、字体之类的并没有包含实际数据的信息，也就是仿照Apple中UITableView等集合视图之类的地方，按照这种思维去建立单元格存储和单元格委托
 
@@ -490,7 +499,7 @@ protocol SwitchWithTextCellDelegate {
   ```
 * 最终，表格视图单元格变得非常简单
 
-```
+```swift
 // SettingViewController
 let viewModel = MinionModeViewModel()
 cell.configure(withDataSource:viewModel, delegate: viewModel)
@@ -515,7 +524,7 @@ return cell
   }
   ```
 
-* 虽然说这种设计模式是游戏方面的，但是我们平时的代码也可以参考这种设计模式：这样就不需要让实际的单元格实现这个协议了，只需要将其根更广泛的TextPresentable 联系在一起就可以了，这样，任何拥有标签的视图，而不仅仅是单元格，都可以实现这个协议来弯沉相关的功能。这样就可以说这个标签有什么样的温恩，什么样的颜色，以及什么样的字体
+* 虽然说这种设计模式是游戏方面的，但是我们平时的代码也可以参考这种设计模式：这样就不需要让实际的单元格实现这个协议了，只需要将其根更广泛的TextPresentable 联系在一起就可以了，这样，任何拥有标签的视图，而不仅仅是单元格，都可以实现这个协议来完成相关的功能。这样就可以说这个标签有什么样的文案，什么样的颜色，以及什么样的字体
 
 ```swift
 protocol TextPresentable {
@@ -547,7 +556,7 @@ class SwitchWithTextTableViewCell<T where T: TextPresentable, T: SwitchPresentab
 }
 ```
 
-> 在这种情况下，它没有实现这些协议，但是会期待某种实现这些协议的东西传递进去，因此我们使用了泛型，这个单元格期待了一个实现了TextPresentableProtocol 的委托。就我们而言，传递进去的将是一个实现了这些协议的东西就可以了，现在要基于这些信息在单元格当中配置所有的东西了，现在就可以基于浙西而信息在单元格中配置所有的东西了
+> 在这种情况下，它没有实现这些协议，但是会期待某种实现这些协议的东西传递进去，因此我们使用了泛型，这个单元格期待了一个实现了TextPresentableProtocol 的委托。就我们而言，传递进去的将是一个实现了这些协议的东西就可以了，现在要基于这些信息在单元格当中配置所有的东西了，现在就可以基于协议和信息，在单元格中配置所有的东西了
 
 ```swift
 extension MinionModeViewModel: TextPresentable {
@@ -601,7 +610,7 @@ extension MinionModeViewModel: TextPresentable {
 
 * 使用 UITableView+FDTemplateLayoutCell（百度知道负责人孙源） 无疑是解决算高问题的最佳实践之一，既有 iOS8 self-sizing 功能简单的 API，又可以达到 iOS7 流畅的滑动效果，还保持了最低支持 iOS6
 
-* FDTemplateLayoutCell 的高度预缓存是一个优化功能，利用RunLoop空闲时间执行预缓存任务计算，当用户正在滑动列表时显然不应该执行计算任务影响滑动体验。
+* **FDTemplateLayoutCell 的高度预缓存**是一个优化功能，利用RunLoop空闲时间执行预缓存任务计算，当用户正在滑动列表时显然不应该执行计算任务影响滑动体验。
 
   * 当用户正在滑动 UIScrollView 时，RunLoop 将切换到 UITrackingRunLoopMode 接受滑动手势和处理滑动事件（包括减速和弹簧效果），此时，其他 Mode （除 NSRunLoopCommonModes 这个组合 Mode）下的事件将全部暂停执行，来保证滑动事件的优先处理，这也是 iOS 滑动顺畅的重要原因
   * 注册 RunLoopObserver 可以观测当前 RunLoop 的运行状态，并在状态机切换时收到通知：
@@ -688,7 +697,7 @@ extension MinionModeViewModel: TextPresentable {
 * 手机电池的低功耗设置
 * Spootlight，你的设备会向推荐最近通话过的联系人，使用过的APP以及你可能感兴趣的去处、信息呈现更精彩 
 
-#### 25. 我是怎样用两个imageView实现了无线轮播！
+#### 25. 我是怎样用两个imageView实现了无限轮播！
 
 1. 建立一个scrollView，设置contentsize为3\*kWidth，contentOffSet为kWidth
 2. 接下来使用代理方法scrollViewDidScroll来监听scrollview的滚动，定义一个枚举变量来记录滚动的方向
@@ -697,7 +706,7 @@ extension MinionModeViewModel: TextPresentable {
    \[self addObserver:self forKeyPath:@"direction" options:NSKeyValueObservingOptionNew context:nil\];
 4. 通过observeValueForKeyPath判断滚动的方向，当偏移量大于x，表示左移，则将otherImageView加在右边，偏移量小于x，表示右移，则将otherImageView加在左边。同时判断设置对应的索引，图片
 5. 通过代理方法scrollViewDidEndDecelerating来监听滚动结束，结束后，scrollview的偏移量为0或者2x，我们通过代码再次将scrollview的偏移量设置为x，并将currImageView的图片修改为otherImageView的图片，那么我们看到的还是currImageView，只不过展示的是下一张图片，如图，又变成了最初的效果
-6. ，然后设置自动轮播，添加计时器，利用setContentOffset方法里面setContentOffset:animated:方法执行完毕后不会调用scrollview的scrollViewDidEndDecelerating方法，但是会调用scrollViewDidEndScrollingAnimation方法，因此我们要在该方法中调用pauseScroll（即监听减速结束后由otherImageView切换到currImageView的方法）
+6. 然后设置自动轮播，添加计时器，利用setContentOffset方法里面setContentOffset:animated:方法执行完毕后不会调用scrollview的scrollViewDidEndDecelerating方法，但是会调用scrollViewDidEndScrollingAnimation方法，因此我们要在该方法中调用pauseScroll（即监听减速结束后由otherImageView切换到currImageView的方法）
 7. 添加计时器：self.timer = \[NSTimer timerWithTimeInterval:self.time target:self selector:@selector\(nextPage\) userInfo:nil repeats:YES\];
 8. 在scrollViewWillBeginDragging中停止计时器
 9. 在scrollViewDidEndDragging中开启计时器
@@ -770,7 +779,6 @@ extension MinionModeViewModel: TextPresentable {
 
 * 当然有时候也会用到一些第三方，比如在使用UICollectionView和UITableView的时候，Facebook有一个框架叫AsyncDisplayKit，这个库就可以很好地提升滚动时流畅性以及图片异步下载功能（不支持sb和autoLayout，需要手动进行约束设置），AsyncDisplayKit用相关node类，替换了UIView和它的子类,而且是线程安全的。它可以异步解码图片，调整图片大小以及对图片和文本进行渲染，把这些操作都放到子线程，滑动的时候就流畅许多。我认为这个库最方便的就是实现图片异步解码。UIImage显示之前必须要先解码完成，而且解码还是同步的。尤其是在UICollectionView/UITableView 中使用 prototype cell显示大图，UIImage的同步解码在滚动的时候会有明显的卡顿。另外一个很吸引人的点是AsyncDisplayKit可以把view层次结构转成layer。因为复杂的view层次结构开销很大，如果不需要view特有的功能（例如点击事件），就可以使用AsyncDisplayKit 的layer backing特性从而获得一些额外的提升。当然这个库还处于开发阶段，还有一些地方地方有待完善，比如不支持缓存，我要使用这个库的时候一般是结合Alamofire和AlamofireImage实现图片的缓存
 
->
 
 
 
