@@ -144,7 +144,7 @@
 * 偏好设置（preference），利用NSUserDefaults
 
   * 用来保存应用程序设置和属性、用户保存的数据。用户再次打开程序或开机后这些数据仍然存在
-  * NSUserDefaults可以存储的数据类型包括：NSData、NSString、NSNumber、NSDate、NSArray、NSDictionary。如果要存储其他类型，需要先转化为前面的类型，才能用NSUserDefault存储
+  * NSUserDefaults支持的数据类型有：NSNumber（NSInteger、float、double），NSString，NSDate，NSArray，NSDictionary，BOOL。如果要存储其他类型，需要先转化为前面的类型，才能用NSUserDefault存储
   * 偏好设置是专门用来保存应用程序的配置信息的，一般不要在偏好设置中保存其他数据
   * 偏好设置会将所有数据保存到同一个文件中。即preference目录下的一个以此应用包名来命名的plist文件。
 
