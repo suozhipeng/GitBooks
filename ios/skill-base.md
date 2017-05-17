@@ -8,7 +8,7 @@
 
 * 首先二者都是多线程相关的概念，当然在使用中也是根据不同情境进行不同的选择；
 * GCD是将任务添加到队列中（串行/并发/主队列），并且制定任务执行的函数（同步/异步），其性能最好，底层是C语言的API，也更轻量级。iOS4.0以后推出的，针对多核处理器的并发技术，只能设置某一个队列的优先级，其高级功能有一次性执行dispatch\_once，延迟操作dispatch\_after，调度组等等；
-* NSOperation把操作（异步）添加到队列中（全局的并发队列），是OC框架，更加面向对象，是对GCD的封装，iOS2.0推出，苹果推出GCD之后，对NSOperation的底层全部重写，可以随时取消已经设定准备要执行的任务，已经执行的除外，可以设置队列中每一个操作的优先级，其高级功能**可以设置最大操作并发数，继续/暂停/全部取消，可以快队列设置操作的依赖关系，通过KVO监听 NSOperation 对象的属性，如 isCancelled、isFinished；对象可重用******。
+* NSOperation把操作（异步）添加到队列中（全局的并发队列），是OC框架，更加面向对象，是对GCD的封装，iOS2.0推出，苹果推出GCD之后，对NSOperation的底层全部重写，可以随时取消已经设定准备要执行的任务，已经执行的除外，可以设置队列中每一个操作的优先级，其高级功能**可以设置最大操作并发数，继续/暂停/全部取消，可以快队列设置操作的依赖关系，通过KVO监听 NSOperation 对象的属性，如 isCancelled、isFinished；对象可重用**_**\*\***_。
 
 #### 1.2 谈谈多线程的应用
 
@@ -22,12 +22,12 @@
 
 #### 2. 线程之间是如何通信的？
 
-* 通过主线程和子线程切换的时候传递参数```objectivec performSelecter:onThread:withObject:waitUntilDone:```
+* 通过主线程和子线程切换的时候传递参数`objectivec performSelecter:onThread:withObject:waitUntilDone:`
 
 #### 3. 网络图片处理问题怎么解决图片重复下载问题？（SDWebImage大概实现原理）
 
 * 这个就需要用到字典，以图片的下载地址url为key，下载操作为value，所有的图片大概分成三类：**已经下载好的，正在下载的和将要下载的**；
-* 当一张图片将要进行下载操作的时候，--> 先判断缓存中是否有相同的图片，-->如果有的话就返回，-->没有的话就根据url的md5加密值去沙盒中找，--> 有的话就拿出来用， --> 没有的话再去以图片的url为key去字典中找有没有正在进行的任务，--> 最后去判断等待的下载操作任务里面的字典有无相同key， --> 如果没有，就自己开启任务，记录一下，文件保存的名称是url的md5值
+* 当一张图片将要进行下载操作的时候，--&gt; 先判断缓存中是否有相同的图片，--&gt;如果有的话就返回，--&gt;没有的话就根据url的md5加密值去沙盒中找，--&gt; 有的话就拿出来用， --&gt; 没有的话再去以图片的url为key去字典中找有没有正在进行的任务，--&gt; 最后去判断等待的下载操作任务里面的字典有无相同key， --&gt; 如果没有，就自己开启任务，记录一下，文件保存的名称是url的md5值
 * 这里建立了两个字典 :  
   1.iconCache:保存缓存的图片  
   2.blockOperation 用来保存下载任务  
@@ -83,9 +83,7 @@
   * 字典转模型：像几个出名的开源库JSONModel、MJExtension等都是通过这种方式实现的\(利用runtime的class\_copyIvarList获取属性数组，遍历模型对象的所有成员属性，根据属性名找到字典中key值进行赋值，当然这种方法只能解决NSString、NSNumber等，如果含有NSArray或NSDictionary，还要进行第二步转换，如果是字典数组，需要遍历数组中的字典，利用objectWithDict方法将字典转化为模型，在将模型放到数组中，最后把这个模型数组赋值给之前的字典数组\)
 * Method Swizzling：OC中调用方法事实上就是向对象发送消息，而查找消息的唯一依据就是selector的名字，因此可以使用runtime运行时机制动态交换方法。在+load方法里面调换，因为method swizzling的影响范围是全局的，所以应该放在最保险的地方来处理，+load方法能够保证能在类初始化的时候一定能被调用，可以保证统一性，如果是在使用的时候才去调用，可能达不到全局处理的效果；使用dispatch\_once保证只交换一次。`objectivec [objc_getClass("__NSArrayM") swizzleSelector:@selector(addObject:)withSwizzledSelector:@selector(hyb_safeAddObject:)];`
 
-
->    使用场景：addObject方法添加的值为nil的时候会崩溃。调用objectAtIndex:时出现崩溃提示empty数组问题
-
+> 使用场景：addObject方法添加的值为nil的时候会崩溃。调用objectAtIndex:时出现崩溃提示empty数组问题
 
 #### 8. 谈谈你对Run Loop的理解
 
@@ -215,7 +213,8 @@
 * 数据库：SQLite
 
 * Core Data：[点击查看大神讲解](http://www.jianshu.com/p/6e048f7c5812)
-* 属性列表
+
+* 属性列表:plist文件
 
 #### 这五种持久化操作不同点
 
@@ -223,9 +222,8 @@
 
 * 从加密性来看，其中归档会将数据进行加密，而偏好设置是直接保存到属性列表中，不会对数据进行加密
 
-* 从存储类型来看，属性列表只能存放固定的七种类型（可在plist文件中看到），归档对存储类型无限制
+* 从存储类型来看，属性列表只能存放固定的七种类型（Array，Dictionary，Boolean,Data,Date，Number，String），归档对存储类型无限制
 
-  
 ### 13. KVC 和 KVO
 
 * KVC\(key-value-coding键值编码，跟多情况下会简化程序代码\)的常见用法：
@@ -249,7 +247,9 @@
   do something....
 }
 ```
+
 **KVO实现原理**
+
 > 当一个类的属性被观察的时候，系统会通过runtime动态创建一个该类的派生类，并且会在这个类中重写基类中被观察的属性的setter方法，而且系统将这个类的isa指针指向了派生类（NSNotifying\_类名），从而实现了给监听的属性赋值时调用的是派生类的setter方法。重写的setter方法会在调用原setter方法后，通知观察对象值得改变。
 
 #### 14. @synthesize和@dynamic区别是什么
@@ -259,12 +259,12 @@
 * @dynamic告诉编译器，属性的setter和getter由用户自己实现，不自动生成（readOnly只实现getter即可），但是如果没有自己实现，编译的时候不会报错，运行的时候就会报错，这就是所谓的动态绑定
 
 #### 15. 谈谈事件响应链的一般顺序
-> 
-* 一般来说，第一响应者是个视图对象或者其他子类对象，当其被触摸以后事件便交由他处理，
-* 如果他不处理，时间就会被传递给它的视图控制器对象viewController（如果存在），
-* 然后是它的父视图对象（superView）（如果存在），依次类推，直到顶层视图，
-* 接着沿着顶层视图（topView）到窗口（UIWindow对象）再到程序（Application对象）。
-* 如果整个过程都没有响应这个事件，该事件就会被抛弃。一般情况下，在响应链中只要有对象响应那个处理事件，事件就会停止传递
+
+> * 一般来说，第一响应者是个视图对象或者其他子类对象，当其被触摸以后事件便交由他处理，
+> * 如果他不处理，时间就会被传递给它的视图控制器对象viewController（如果存在），
+> * 然后是它的父视图对象（superView）（如果存在），依次类推，直到顶层视图，
+> * 接着沿着顶层视图（topView）到窗口（UIWindow对象）再到程序（Application对象）。
+> * 如果整个过程都没有响应这个事件，该事件就会被抛弃。一般情况下，在响应链中只要有对象响应那个处理事件，事件就会停止传递
 
 #### 16.1 post和get方式的区别
 
@@ -302,6 +302,7 @@
 * POST是用来提交数据的。提交的数据放在HTTP请求的正文里，目的在于提交数据并用于服务器端的存储，而不允许用户过多的更改相应数据（主要是相对于在url 修改要麻烦很多\)。
 
 * PUT操作是幂等的。所谓**幂等**是指不管进行多少次操作，结果都一样。比如我用PUT修改一篇文章，然后在做同样的操作，每次操作后的结果并没有不同
+
 * POST操作既不是安全的，也不是幂等的，比如常见的POST重复加载问题：当我们多次发出同样的POST请求后，其结果是创建出了若干的资源。
 * 安全和幂等的意义在于：当操作没有达到预期的目标时，我们可以不停的重试，而不会对资源产生副作用。从这个意义上说，POST操作往往是有害的，但很多时候我们还是不得不使用它。
 
@@ -317,11 +318,12 @@
 * 非集合类对mutable对象进行copy和mutableCopy都是内容复制。
 * 在集合类对象中，对mmutable对象进行copy，是指针复制，mutableCopy是内容复制
 * 在集合类对象中，对mutable对象进行copy和mutableCopy都是内容复制。但是：集合对象的内容复制仅限于对象本身，对象元素仍然是指针复制。
-```objectivec 
-NSString *str = @"string"; 
-str = @"newString"; 
-```
-> 打印对象地址，发现是发生变化的，需要把@"newStirng"当做一个新的对象，将这段对象的内存地址赋值给str
+  ```objectivec
+  NSString *str = @"string"; 
+  str = @"newString";
+  ```
+
+  > 打印对象地址，发现是发生变化的，需要把@"newStirng"当做一个新的对象，将这段对象的内存地址赋值给str
 
 #### 18. 关于项目中动画的使用
 
@@ -383,7 +385,8 @@ var viewModel = ViewModel(model: Account)
 * 我们已经见识过Apple使用了大量协议，比如在tableView当中，我们可以通过协议来告诉Apple需要多少个表视图单元格，而不是每时每刻都要继承UITableViewController
 
 * 在这里以MVVM作为测试用例：
-> 比如现在需要建立一个类似设置界面的tableView，每个cell需要一个label和一个switch，自定义SwitchWithTextTableViewCell，在其内部建立一个configure方法中对label的title，titleFont，titleColor，switch的switchOn和switchColor等进行初始化，但这种方式非常累赘，比如添加一个副标题，就需要额外添加三个属性
+
+  > 比如现在需要建立一个类似设置界面的tableView，每个cell需要一个label和一个switch，自定义SwitchWithTextTableViewCell，在其内部建立一个configure方法中对label的title，titleFont，titleColor，switch的switchOn和switchColor等进行初始化，但这种方式非常累赘，比如添加一个副标题，就需要额外添加三个属性
 
 * 但是利用协议SwitchWithTextCellProtocol，让视图模型实现这个协议，然后在这里设置所有的属性
 
@@ -568,7 +571,7 @@ extension MinionModeViewModel: TextPresentable {
 
 * 我们的视图模型将会有一个TextPresentable代码，在其中可以配置文本、颜色、字体，并且由于所有的这些协议扩展中都已经有默认值了，甚至不需要视图模型去实现这些具体的内容
 
-* 最后，视图模型当中的代码就只需要dequeue相应的单元格。然后通过视图模型对其进行配置，然后返回单元格即可  
+* 最后，视图模型当中的代码就只需要dequeue相应的单元格。然后通过视图模型对其进行配置，然后返回单元格即可
 
 #### 20.2 Swift2.2随着iOS9.3一同登场，讲讲什么新调整？
 
@@ -597,10 +600,11 @@ extension MinionModeViewModel: TextPresentable {
 * iOS8 WWDC 中推出了 self-sizing cell 的概念，旨在让 cell 自己负责自己的高度计算，使用 frame layout 和 auto layout 都可以享受到：
 
   * self.tableView.estimatedRowHeight = 213;
- 
+
     self.tableView.rowHeight = UITableViewAutomaticDimension;
- 
+
     如果不加上估算高度的设置，自动算高就失效了
+
   * 这个自动算高在 push 到下一个页面或者转屏时会出现高度特别诡异的情况，不过现在的版本修复了。
 
 * 相同的代码在 iOS7 和 iOS8 上滑动顺畅程度完全不同，iOS8 莫名奇妙的卡。很大一部分原因是 iOS8 上的算高机制大不相同,从 WWDC 也倒是能找到点解释，cell 被认为随时都可能改变高度（如从设置中调整动态字体大小），所以每次滑动出来后都要重新计算高度。
@@ -656,7 +660,7 @@ extension MinionModeViewModel: TextPresentable {
 * 为了提高效率通过SDWebImageDecoder将包装在Data的资源解压，然后画在另外一张图片上，这样新的图片就不再需要重复解压了
 * 这是典型的空间换时间的做法
 
-####  24. 关于新特性
+#### 24. 关于新特性
 
 > iOS7新特性
 
@@ -690,6 +694,7 @@ extension MinionModeViewModel: TextPresentable {
 * UI Test：iOS9.0之前加入异步代码测设和性能测试，可以说Xcode自带的测试框架已经能满足绝大部分单元测试的需求了，但是这并不够，因为开发一个iOS app从来都是很注重UI和用户体验的，之前UI测试使用KIF，Automating，iOS9.0的Xcode给出了自带的XCUITest的一系列工具，和大多数UI测试工具类似，XCUI使用Accessbility标记来确定view，但因为是Apple自家的东西，可以自动记录操作流程，所以只要书写最后的验证部分就好了，比其他UI测试工具方便多了
 
 * Swift2
+
 * APP Thinning：app为了后向兼容，都同时包含了32bit和64bit，在图片资源2X和3X的一应俱全，下载的时候只需要当前机型对应的一套资源，但是却要全部打包下载，现在只需要升级iOS9，就可以省很多流量
 * 3D touch
 * 地图显示实时的交通状况
@@ -741,6 +746,7 @@ extension MinionModeViewModel: TextPresentable {
   “Flash updated Regions”用于标记发生重绘的区域
 
 * 如果 row 的高度不相同,那么将其缓存下来
+
 * 如果 cell 显示的内容来自网络,那么确保这些内容是通过异步下载
 * 使用 shadowPath 来设置阴影，图层最好不要使用阴影,阴影会导致离屏渲染\(在进入屏幕渲染之前,还看不到的时候会再渲染一次,尽量不要产生离屏渲染\)
 * 减少 subview 的数量，不要去添加或移除view，要就显示，不要就隐藏
@@ -751,7 +757,7 @@ extension MinionModeViewModel: TextPresentable {
 * 读取文件,写入文件,最好是放到子线程,或先读取好,在让tableView去显示
 * tableView滚动的时候,不要去做动画\(微信的聊天界面做的就很好,在滚动的时候,动态图就不让他动,滚动停止的时候才动,不然可能会有点影响流畅度\)。在滚动的时候加载图片，停止拖拽后在减速过程中不加载图片，减速停止后加载可见范围内图片
 
-####  27. 谈谈内存的优化和注意事项（使用Instrument工具的CoreAnimation、GPU Driver、I/O操作，检查fps数值）
+#### 27. 谈谈内存的优化和注意事项（使用Instrument工具的CoreAnimation、GPU Driver、I/O操作，检查fps数值）
 
 * 重用问题：比如UITableViewCell、UICollectionViewCell、UITableViewHeaderFooterViews等设置正确的reuseIdentifier，充分重用
 
@@ -778,7 +784,6 @@ extension MinionModeViewModel: TextPresentable {
 * 选择图片时，要对图片进行压缩处理，根据不同的情况选择不同的图片加载方式，-imageNamed:读取到内存后会缓存下来，适合图片资源较小，使用很频繁的图片；-initWithContentsOfFiles:仅加载图片而不缓存，适合较大的图片。若是collectionView中使用大量图片的时候，可以用UIVIew.layer.contents=\(\_\_bridge id \_Nullable\)\(model.clipedImage.CGImage\)；这样就更轻量级一些
 
 * 当然有时候也会用到一些第三方，比如在使用UICollectionView和UITableView的时候，Facebook有一个框架叫AsyncDisplayKit，这个库就可以很好地提升滚动时流畅性以及图片异步下载功能（不支持sb和autoLayout，需要手动进行约束设置），AsyncDisplayKit用相关node类，替换了UIView和它的子类,而且是线程安全的。它可以异步解码图片，调整图片大小以及对图片和文本进行渲染，把这些操作都放到子线程，滑动的时候就流畅许多。我认为这个库最方便的就是实现图片异步解码。UIImage显示之前必须要先解码完成，而且解码还是同步的。尤其是在UICollectionView/UITableView 中使用 prototype cell显示大图，UIImage的同步解码在滚动的时候会有明显的卡顿。另外一个很吸引人的点是AsyncDisplayKit可以把view层次结构转成layer。因为复杂的view层次结构开销很大，如果不需要view特有的功能（例如点击事件），就可以使用AsyncDisplayKit 的layer backing特性从而获得一些额外的提升。当然这个库还处于开发阶段，还有一些地方地方有待完善，比如不支持缓存，我要使用这个库的时候一般是结合Alamofire和AlamofireImage实现图片的缓存
-
 
 
 
